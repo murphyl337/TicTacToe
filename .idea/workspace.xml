@@ -5,8 +5,8 @@
     <ignored path="TDDTicTacToe.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/SpecRunner.html" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370451191893" ignored="false" />
-    <file path="/tttSpec.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370454364427" ignored="false" />
-    <file path="/tictactoe.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370454383615" ignored="false" />
+    <file path="/tttSpec.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370457196557" ignored="false" />
+    <file path="/tictactoe.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370456513297" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="tictactoe.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="tictactoe.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="22" selection-start="782" selection-end="782" vertical-scroll-proportion="0.41666666">
+            <state line="37" column="131" selection-start="1033" selection-end="1033" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="n#!!doc;n#GameBoard#0" expanded="false" />
               </folding>
@@ -37,13 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tttSpec.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="tttSpec.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="147" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#159#0" expanded="false" />
-              </folding>
+            <state line="45" column="7" selection-start="1422" selection-end="1422" vertical-scroll-proportion="0.71590906">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -69,8 +67,8 @@
       <list>
         <option value="$PROJECT_DIR$/js/tttSpec.js" />
         <option value="$PROJECT_DIR$/SpecRunner.html" />
-        <option value="$PROJECT_DIR$/js/specs/tttSpec.js" />
         <option value="$PROJECT_DIR$/js/tictactoe.js" />
+        <option value="$PROJECT_DIR$/js/specs/tttSpec.js" />
       </list>
     </option>
   </component>
@@ -346,9 +344,7 @@
     <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="0" selection-start="194" selection-end="194" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#159#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -376,21 +372,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
+    <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="147" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0">
+        <state line="37" column="131" selection-start="1033" selection-end="1033" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#0#159#0" expanded="false" />
+            <element signature="n#!!doc;n#GameBoard#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
+    <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="22" selection-start="782" selection-end="782" vertical-scroll-proportion="0.41666666">
-          <folding>
-            <element signature="n#!!doc;n#GameBoard#0" expanded="false" />
-          </folding>
+        <state line="45" column="7" selection-start="1422" selection-end="1422" vertical-scroll-proportion="0.71590906">
+          <folding />
         </state>
       </provider>
     </entry>

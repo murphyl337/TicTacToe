@@ -9,7 +9,6 @@ describe("Game board", function(){
     var gameBoard;
 
     beforeEach(function(){
-
         gameBoard = new GameBoard();
         gameBoard.initialize();
     });
@@ -36,6 +35,14 @@ describe("Game board", function(){
     it("should return all spaces that haven't been taken", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
         expect(availableSpaces.length).toBe(9);
+    });
+
+    it("should return a board with identical properties when cloned", function(){
+        var clone = gameBoard.clone();
+        for(var space=0; space<9; space++){
+            expect(clone.spaces[space].mark).toBe(gameBoard.spaces[space].mark);
+            expect(clone.spaces[space].position).toBe(gameBoard.spaces[space].position);
+        }
     });
 
     describe("Space", function(){

@@ -28,6 +28,14 @@ function GameBoard(){
         }
         return spaces;
     };
+
+    GameBoard.prototype.clone = function(){
+        var clone = new GameBoard();
+        clone.initialize();
+        for(var space=0; space<boardSize; space++)
+            clone.spaces[space] = this.spaces[space];
+        return clone;
+    };
 }
 
 function Space(mark){
