@@ -9,6 +9,7 @@ describe("Game board", function(){
     var gameBoard;
 
     beforeEach(function(){
+
         gameBoard = new GameBoard();
         gameBoard.initialize();
     });
@@ -27,9 +28,23 @@ describe("Game board", function(){
         }
     });
 
+    it("should change the mark on a space when updated", function(){
+        gameBoard.updateBoard("X", 0);
+        expect(gameBoard.spaces[0].mark).toBe("X");
+    });
+
+    it("should return all spaces that haven't been taken", function(){
+        var availableSpaces = gameBoard.getAvailableSpaces();
+        expect(availableSpaces.length).toBe(9);
+    });
+
     describe("Space", function(){
         it("should have a mark field", function(){
             expect(gameBoard.spaces[0].mark).toBeDefined();
+        });
+
+        it("should have a position field", function(){
+            expect(gameBoard.spaces[0].position).toBeDefined();
         });
     });
 });

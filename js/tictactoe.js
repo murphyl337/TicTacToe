@@ -10,8 +10,23 @@ function GameBoard(){
     var boardSize = 9;
 
     this.initialize = function(){
-        for(var space=0; space<boardSize; space++)
+        for(var space=0; space<boardSize; space++){
             this.spaces[space] = new Space("-");
+            this.spaces[space].position = space;
+        }
+    };
+
+    this.updateBoard = function(marker, position){
+        this.spaces[position].mark = marker;
+    };
+
+    this.getAvailableSpaces = function(){
+        var spaces = [];
+        for(var space=0; space<boardSize; space++){
+            if(this.spaces[space].mark === "-")
+                spaces.push(this.spaces[space]);
+        }
+        return spaces;
     };
 }
 

@@ -5,8 +5,8 @@
     <ignored path="TDDTicTacToe.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/SpecRunner.html" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370451191893" ignored="false" />
-    <file path="/tttSpec.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370453120398" ignored="false" />
-    <file path="/tictactoe.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370453084454" ignored="false" />
+    <file path="/tttSpec.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370454364427" ignored="false" />
+    <file path="/tictactoe.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370454383615" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="tictactoe.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="tictactoe.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="2" selection-start="227" selection-end="227" vertical-scroll-proportion="0.0">
+            <state line="28" column="22" selection-start="782" selection-end="782" vertical-scroll-proportion="0.41666666">
               <folding>
                 <element signature="n#!!doc;n#GameBoard#0" expanded="false" />
               </folding>
@@ -37,10 +37,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tttSpec.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="tttSpec.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="0" selection-start="876" selection-end="876" vertical-scroll-proportion="0.530303">
+            <state line="47" column="147" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#0#159#0" expanded="false" />
               </folding>
@@ -69,8 +69,8 @@
       <list>
         <option value="$PROJECT_DIR$/js/tttSpec.js" />
         <option value="$PROJECT_DIR$/SpecRunner.html" />
-        <option value="$PROJECT_DIR$/js/tictactoe.js" />
         <option value="$PROJECT_DIR$/js/specs/tttSpec.js" />
+        <option value="$PROJECT_DIR$/js/tictactoe.js" />
       </list>
     </option>
   </component>
@@ -376,20 +376,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
+    <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="2" selection-start="227" selection-end="227" vertical-scroll-proportion="0.0">
+        <state line="47" column="147" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="n#!!doc;n#GameBoard#0" expanded="false" />
+            <element signature="e#0#159#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/specs/tttSpec.js">
+    <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="0" selection-start="876" selection-end="876" vertical-scroll-proportion="0.530303">
+        <state line="28" column="22" selection-start="782" selection-end="782" vertical-scroll-proportion="0.41666666">
           <folding>
-            <element signature="e#0#159#0" expanded="false" />
+            <element signature="n#!!doc;n#GameBoard#0" expanded="false" />
           </folding>
         </state>
       </provider>
