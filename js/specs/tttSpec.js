@@ -50,6 +50,15 @@ describe("Game board", function(){
         expect(clone).not.toBe(gameBoard);
     });
 
+    it("returns all of a player's moves", function(){
+        gameBoard.updateBoard("X", 0);
+        gameBoard.updateBoard("O", 1);
+        gameBoard.updateBoard("X", 5);
+
+        var xMoves = gameBoard.getMoves("X");
+        expect(xMoves.compare([0,5])).toBe(true);
+    });
+
     describe("Space", function(){
         it("has a mark field", function(){
             expect(gameBoard.spaces[0].mark).toBeDefined();
@@ -58,5 +67,17 @@ describe("Game board", function(){
         it("has a position field", function(){
             expect(gameBoard.spaces[0].position).toBeDefined();
         });
+    });
+});
+
+describe("Array", function(){
+    it("compares two arrays appropriately", function(){
+        var array1 = [0,1,2];
+        var array2 = [0,1,2];
+        var array3 = [1,2,3];
+
+        expect(array1.compare(array2)).toBe(true);
+        expect(array2.compare(array1)).toBe(true);
+        expect(array3.compare(array1)).toBe(false);
     });
 });

@@ -29,6 +29,16 @@ function GameBoard(){
         return spaces;
     };
 
+    this.getMoves = function(marker){
+        var moves = [];
+        for(var space=0; space<boardSize; space++){
+            if(this.spaces[space].mark === marker)
+                moves.push(space);
+        }
+
+        return moves;
+    };
+
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
         clone.initialize();
