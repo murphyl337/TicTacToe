@@ -7,7 +7,9 @@
  */
 function GameBoard(){
     this.spaces = [];
+    var wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
     var boardSize = 9;
+    var winSize = 8;
 
     this.initialize = function(){
         for(var space=0; space<boardSize; space++){
@@ -37,6 +39,28 @@ function GameBoard(){
         }
 
         return moves;
+    };
+
+    this.isGameOver = function(){
+        var over = false;
+        if(this.getAvailableSpaces().length === 0) over = true;
+        return over;
+    };
+
+    this.isWinner = function(marker){
+        var counter = 0;
+        var moves = this.getMoves(marker);
+        var winner = false;
+        for(var win=0; win<wins.length; win++){
+            for(var move=0; move < 3; move++){
+                if(moves.indexOf(wins[win][move]) >= 0)
+                    counter++;
+            }
+            if(counter === 3)
+                winner = true;
+            counter = 0;
+        }
+        return winner;
     };
 
     GameBoard.prototype.clone = function(){

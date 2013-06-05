@@ -59,6 +59,56 @@ describe("Game board", function(){
         expect(xMoves.compare([0,5])).toBe(true);
     });
 
+    it("determines winner when moves aren't in win order", function(){
+        gameBoard.updateBoard("X", 0);
+        gameBoard.updateBoard("X", 1);
+        gameBoard.updateBoard("X", 4);
+        gameBoard.updateBoard("X", 6);
+        gameBoard.updateBoard("X", 8);
+        gameBoard.updateBoard("O", 2);
+        gameBoard.updateBoard("O", 3);
+        gameBoard.updateBoard("O", 5);
+        gameBoard.updateBoard("O", 7);
+
+        //  X X O
+        //  O X O
+        //  X O X
+
+        expect(gameBoard.isWinner("X")).toBe(true);
+    });
+
+    it("game is over when all moves taken", function(){
+        gameBoard.updateBoard("X", 0);
+        gameBoard.updateBoard("X", 1);
+        gameBoard.updateBoard("X", 4);
+        gameBoard.updateBoard("X", 6);
+        gameBoard.updateBoard("X", 8);
+        gameBoard.updateBoard("O", 2);
+        gameBoard.updateBoard("O", 3);
+        gameBoard.updateBoard("O", 5);
+        gameBoard.updateBoard("O", 7);
+
+        expect(gameBoard.isGameOver()).toBe(true);
+    });
+
+//    it("determines draw when all moves taken and no one is winner", function(){
+//        gameBoard.updateBoard("X", 0);
+//        gameBoard.updateBoard("X", 1);
+//        gameBoard.updateBoard("X", 5);
+//        gameBoard.updateBoard("X", 6);
+//        gameBoard.updateBoard("X", 8);
+//        gameBoard.updateBoard("O", 2);
+//        gameBoard.updateBoard("O", 3);
+//        gameBoard.updateBoard("O", 4);
+//        gameBoard.updateBoard("O", 7);
+//
+//        //  X X O
+//        //  O O X
+//        //  X O X
+//
+//        expect(gameBoard.isDraw()).toBe(false);
+//    });
+
     describe("Space", function(){
         it("has a mark field", function(){
             expect(gameBoard.spaces[0].mark).toBeDefined();
