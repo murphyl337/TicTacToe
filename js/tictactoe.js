@@ -63,6 +63,14 @@ function GameBoard(){
         return winner;
     };
 
+    this.isDraw = function(){
+        var draw = false;
+        if(this.isGameOver() &&
+            (!this.isWinner("X") && !this.isWinner("O")))
+                draw = true;
+        return draw;
+    };
+
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
         clone.initialize();

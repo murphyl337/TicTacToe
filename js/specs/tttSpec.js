@@ -60,54 +60,19 @@ describe("Game board", function(){
     });
 
     it("determines winner when moves aren't in win order", function(){
-        gameBoard.updateBoard("X", 0);
-        gameBoard.updateBoard("X", 1);
-        gameBoard.updateBoard("X", 4);
-        gameBoard.updateBoard("X", 6);
-        gameBoard.updateBoard("X", 8);
-        gameBoard.updateBoard("O", 2);
-        gameBoard.updateBoard("O", 3);
-        gameBoard.updateBoard("O", 5);
-        gameBoard.updateBoard("O", 7);
-
-        //  X X O
-        //  O X O
-        //  X O X
-
+        gameBoard = generateXDiagonalWinState();
         expect(gameBoard.isWinner("X")).toBe(true);
     });
 
     it("game is over when all moves taken", function(){
-        gameBoard.updateBoard("X", 0);
-        gameBoard.updateBoard("X", 1);
-        gameBoard.updateBoard("X", 4);
-        gameBoard.updateBoard("X", 6);
-        gameBoard.updateBoard("X", 8);
-        gameBoard.updateBoard("O", 2);
-        gameBoard.updateBoard("O", 3);
-        gameBoard.updateBoard("O", 5);
-        gameBoard.updateBoard("O", 7);
-
+        gameBoard = generateXDiagonalWinState();
         expect(gameBoard.isGameOver()).toBe(true);
     });
 
-//    it("determines draw when all moves taken and no one is winner", function(){
-//        gameBoard.updateBoard("X", 0);
-//        gameBoard.updateBoard("X", 1);
-//        gameBoard.updateBoard("X", 5);
-//        gameBoard.updateBoard("X", 6);
-//        gameBoard.updateBoard("X", 8);
-//        gameBoard.updateBoard("O", 2);
-//        gameBoard.updateBoard("O", 3);
-//        gameBoard.updateBoard("O", 4);
-//        gameBoard.updateBoard("O", 7);
-//
-//        //  X X O
-//        //  O O X
-//        //  X O X
-//
-//        expect(gameBoard.isDraw()).toBe(false);
-//    });
+    it("determines draw when all moves taken and no one is winner", function(){
+        gameBoard = generateDrawState();
+        expect(gameBoard.isDraw()).toBe(true);
+    });
 
     describe("Space", function(){
         it("has a mark field", function(){
@@ -131,3 +96,41 @@ describe("Array", function(){
         expect(array3.compare(array1)).toBe(false);
     });
 });
+
+function generateXDiagonalWinState(){
+    var board = new GameBoard();
+    board.initialize();
+
+    board.updateBoard("X", 0);
+    board.updateBoard("X", 1);
+    board.updateBoard("X", 4);
+    board.updateBoard("X", 6);
+    board.updateBoard("X", 8);
+    board.updateBoard("O", 2);
+    board.updateBoard("O", 3);
+    board.updateBoard("O", 5);
+    board.updateBoard("O", 7);
+    //  X X O
+    //  O X O
+    //  X O X
+    return board;
+}
+
+function generateDrawState(){
+    var board = new GameBoard();
+    board.initialize();
+
+    board.updateBoard("X", 0);
+    board.updateBoard("X", 1);
+    board.updateBoard("X", 5);
+    board.updateBoard("X", 6);
+    board.updateBoard("X", 8);
+    board.updateBoard("O", 2);
+    board.updateBoard("O", 3);
+    board.updateBoard("O", 4);
+    board.updateBoard("O", 7);
+    //  X X O
+    //  O O X
+    //  X O X
+    return board;
+}
