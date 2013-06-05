@@ -11,7 +11,11 @@ describe("Game board", function(){
         gameBoard = new GameBoard();
     });
 
+    it("should be defined", function(){
+        expect(gameBoard).toBeDefined();
+    });
+
     it("should have 9 spaces", function(){
-        expect(gameBoard.spaces.length).toEqual(9);
+        expect(gameBoard.spaces.length).toBe(9);
     });
 });
