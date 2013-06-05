@@ -7,8 +7,10 @@
  */
 describe("Game board", function(){
     var gameBoard;
+
     beforeEach(function(){
         gameBoard = new GameBoard();
+        gameBoard.initialize();
     });
 
     it("should be defined", function(){
@@ -17,5 +19,17 @@ describe("Game board", function(){
 
     it("should have 9 spaces", function(){
         expect(gameBoard.spaces.length).toBe(9);
+    });
+
+    it("should be blank when initialized", function(){
+        for(var space=0; space<gameBoard.spaces.length; space++){
+            expect(gameBoard.spaces[space].mark).toBe("-");
+        }
+    });
+
+    describe("Space", function(){
+        it("should have a mark field", function(){
+            expect(gameBoard.spaces[0].mark).toBeDefined();
+        });
     });
 });

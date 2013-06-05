@@ -9,6 +9,13 @@ function GameBoard(){
     this.spaces = [];
     var boardSize = 9;
 
-    for(var space=0; space<boardSize; space++)
-        this.spaces[space] = "";
+    this.initialize = function(){
+        for(var space=0; space<boardSize; space++)
+            this.spaces[space] = new Space("-");
+    };
+}
+
+function Space(mark){
+    this.mark = mark;
+    this.position;
 }
