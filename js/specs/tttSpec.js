@@ -45,6 +45,11 @@ describe("Game board", function(){
         }
     });
 
+    it("should return a new object when cloned", function(){
+        var clone = gameBoard.clone();
+        expect(clone).not.toBe(gameBoard);
+    });
+
     describe("Space", function(){
         it("should have a mark field", function(){
             expect(gameBoard.spaces[0].mark).toBeDefined();
