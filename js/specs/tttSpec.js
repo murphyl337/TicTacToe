@@ -89,7 +89,7 @@ describe("Player", function(){
     var player1;
 
     beforeEach(function(){
-        player1 = new Player("X");
+        player1 = new Player("X", "human");
     });
 
     it("is defined", function(){
@@ -98,6 +98,10 @@ describe("Player", function(){
 
     it("has a marker", function(){
         expect(player1.marker).toBe("X");
+    });
+
+    it("has a type", function(){
+        expect(player1.type).toBe("human");
     });
 });
 

@@ -1,12 +1,3 @@
-/**
- * Created with JetBrains WebStorm.
- * User: tmurphy
- * Date: 6/5/13
- * Time: 12:44 PM
- * To change this template use File | Settings | File Templates.
- */
-
-
 function GameBoard(){
     this.spaces = [];
     var boardSize = 9;
@@ -80,8 +71,9 @@ function Space(mark){
     this.position;
 }
 
-function Player(marker){
+function Player(marker, type){
     this.marker = marker;
+    this.type   = type;
 }
 
 Array.prototype.compare = function (array) {
