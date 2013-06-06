@@ -1,6 +1,6 @@
 Test Driven TicTacToe
 
-To play game: open "index.html" in web browser
+To play game: open "index.html" in web browser (no UI yet)
 
 To view source code: open js/tictactoe.js
 
