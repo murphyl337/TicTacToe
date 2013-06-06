@@ -86,7 +86,7 @@ describe("Game board", function(){
 });
 
 describe("Array", function(){
-    it("compares two arrays appropriately", function(){
+    it("compares two arrays for equivalency", function(){
         var array1 = [0,1,2];
         var array2 = [0,1,2];
         var array3 = [1,2,3];
@@ -94,6 +94,13 @@ describe("Array", function(){
         expect(array1.compare(array2)).toBe(true);
         expect(array2.compare(array1)).toBe(true);
         expect(array3.compare(array1)).toBe(false);
+    });
+
+    it("determines if contents of smaller array are inside larger array", function(){
+        var bigArray = [0,2,6,4,7];
+        var smallArray = [2,4,6];
+
+        expect(bigArray.containsContentsOf(smallArray)).toBe(true);
     });
 });
 

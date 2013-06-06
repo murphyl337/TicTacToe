@@ -27,4 +27,17 @@ Array.prototype.compare = function (array) {
         }
     }
     return true;
-}
+};
+
+Array.prototype.containsContentsOf = function(array) {
+    var contains = true;
+    if(!array)
+        contains = false;
+
+    for(var item=0; item<array.length; item++){
+        if(this.indexOf(array[item]) < 0)
+            contains = false;
+    }
+
+    return contains;
+};

@@ -5,11 +5,11 @@
  * Time: 12:44 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 function GameBoard(){
     this.spaces = [];
-    var wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
     var boardSize = 9;
-    var winSize = 8;
 
     this.initialize = function(){
         for(var space=0; space<boardSize; space++){
@@ -48,17 +48,12 @@ function GameBoard(){
     };
 
     this.isWinner = function(marker){
-        var counter = 0;
+        var wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
         var moves = this.getMoves(marker);
         var winner = false;
         for(var win=0; win<wins.length; win++){
-            for(var move=0; move < 3; move++){
-                if(moves.indexOf(wins[win][move]) >= 0)
-                    counter++;
-            }
-            if(counter === 3)
-                winner = true;
-            counter = 0;
+            if(moves.containsContentsOf(wins[win]))
+                winner = true
         }
         return winner;
     };
@@ -84,3 +79,35 @@ function Space(mark){
     this.mark = mark;
     this.position;
 }
+
+Array.prototype.compare = function (array) {
+    if (!array)
+        return false;
+
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            if (!this[i].compare(array[i]))
+                return false;
+        }
+        else if (this[i] != array[i]) {
+            return false;
+        }
+    }
+    return true;
+};
+
+Array.prototype.containsContentsOf = function(array) {
+    var contains = true;
+    if(!array)
+        contains = false;
+
+    for(var item=0; item<array.length; item++){
+        if(this.indexOf(array[item]) < 0)
+            contains = false;
+    }
+
+    return contains;
+};
