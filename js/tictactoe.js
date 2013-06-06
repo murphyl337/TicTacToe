@@ -71,9 +71,10 @@ function Space(mark){
     this.position;
 }
 
-function Player(marker, type){
+function Player(marker, type, color){
     this.marker = marker;
     this.type   = type;
+    this.color  = color;
 }
 
 Array.prototype.compare = function (array) {
