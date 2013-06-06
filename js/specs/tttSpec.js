@@ -68,6 +68,14 @@ describe("Game board", function(){
         expect(gameBoard.spaces[0].mark).toBe("X");
     });
 
+    it("validMove returns true for available space, false if taken", function(){
+        var valid = gameBoard.isValidMove(0);
+        expect(valid).toBe(true);
+        gameBoard.updateBoard("X", 5);
+        valid = gameBoard.isValidMove(5);
+        expect(valid).toBe(false);
+    });
+
     it("returns all spaces that haven't been taken", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
         expect(availableSpaces.length).toBe(9);
@@ -146,6 +154,14 @@ describe("Player", function(){
 
     it("has a color", function(){
         expect(player1.color).toBe("green");
+    });
+
+    it("makeMove will not updateBoard for invalid move", function(){
+        game.board.updateBoard("X", 0);
+        spyOn(game.board, "updateBoard");
+        player1.makeMove(game, 0);
+        expect(game.board.updateBoard).not.toHaveBeenCalled();
+
     });
 
     it("makeMove updates board", function(){

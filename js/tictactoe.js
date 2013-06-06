@@ -22,6 +22,12 @@ function GameBoard(){
         return spaces;
     };
 
+    this.isValidMove = function(position){
+        var valid = true;
+        if(this.spaces[position].mark !== "-") valid = false;
+        return valid;
+    };
+
     this.getMoves = function(marker){
         var moves = [];
         for(var space=0; space<boardSize; space++){
@@ -77,8 +83,10 @@ function Player(marker, type, color){
     this.color  = color;
 
     this.makeMove = function(game, position){
-        game.board.updateBoard(this.marker, position);
-        game.nextTurn();
+        if(game.board.isValidMove(position)){
+            game.board.updateBoard(this.marker, position);
+            game.nextTurn();
+        }
     };
 }
 
