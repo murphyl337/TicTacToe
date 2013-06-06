@@ -85,6 +85,22 @@ describe("Game board", function(){
     });
 });
 
+describe("Player", function(){
+    var player1;
+
+    beforeEach(function(){
+        player1 = new Player("X");
+    });
+
+    it("is defined", function(){
+        expect(player1).toBeDefined();
+    });
+
+    it("has a marker", function(){
+        expect(player1.marker).toBe("X");
+    });
+});
+
 describe("Array", function(){
     it("compares two arrays for equivalency", function(){
         var array1 = [0,1,2];

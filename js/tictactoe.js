@@ -80,6 +80,10 @@ function Space(mark){
     this.position;
 }
 
+function Player(marker){
+    this.marker = marker;
+}
+
 Array.prototype.compare = function (array) {
     if (!array)
         return false;
