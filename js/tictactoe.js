@@ -38,9 +38,9 @@ function GameBoard(){
         return moves;
     };
 
-    this.isGameOver = function(){
-        var over = false;
-        if(this.getAvailableSpaces().length === 0) over = true;
+    this.hasOpenSpaces = function(){
+        var over = true;
+        if(this.getAvailableSpaces().length === 0) over = false;
         return over;
     };
 
@@ -57,7 +57,7 @@ function GameBoard(){
 
     this.isDraw = function(){
         var draw = false;
-        if(this.isGameOver() &&
+        if(!this.hasOpenSpaces() &&
             (!this.isWinner("X") && !this.isWinner("O")))
                 draw = true;
         return draw;

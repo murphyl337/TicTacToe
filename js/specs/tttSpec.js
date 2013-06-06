@@ -123,7 +123,7 @@ describe("Game board", function(){
 
     it("game is over when all moves taken", function(){
         gameBoard = generateXDiagonalWinState();
-        expect(gameBoard.isGameOver()).toBe(true);
+        expect(gameBoard.hasOpenSpaces()).toBe(false);
     });
 
     it("determines draw when all moves taken and no one is winner", function(){
