@@ -9,6 +9,7 @@
     <file path="/tictactoe.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370525265575" ignored="false" />
     <file path="/fragment.js2" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370476467859" ignored="false" />
     <file path="/array.js" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370477761504" ignored="false" />
+    <file path="/README.md" changelist="5ad47f82-72ee-413d-afec-8f53b88e3631" time="1370525608184" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,10 +29,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="tictactoe.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="tictactoe.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="88" column="9" selection-start="2378" selection-end="2378" vertical-scroll-proportion="0.43560606">
+            <state line="88" column="9" selection-start="2378" selection-end="2378" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="49" selection-start="204" selection-end="204" vertical-scroll-proportion="0.15151516">
               <folding />
             </state>
           </provider>
@@ -79,6 +89,7 @@
         <option value="$PROJECT_DIR$/js/array.js" />
         <option value="$PROJECT_DIR$/js/specs/tttSpec.js" />
         <option value="$PROJECT_DIR$/js/tictactoe.js" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -383,7 +394,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/tictactoe.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="9" selection-start="2378" selection-end="2378" vertical-scroll-proportion="0.43560606">
+        <state line="88" column="9" selection-start="2378" selection-end="2378" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="49" selection-start="204" selection-end="204" vertical-scroll-proportion="0.15151516">
           <folding />
         </state>
       </provider>
