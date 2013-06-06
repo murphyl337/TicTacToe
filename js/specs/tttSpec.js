@@ -5,6 +5,32 @@
  * Time: 12:53 PM
  * To change this template use File | Settings | File Templates.
  */
+
+describe("Game", function(){
+    var game, gameBoard, player1, player2;
+
+    beforeEach(function(){
+        gameBoard = new GameBoard();
+        player1 = new Player("human", "X", "green");
+        player2 = new Player("computer", "O", "pink");
+        game = new Game(gameBoard, player1, player2);
+    });
+
+    it("is defined", function(){
+        expect(game).toBeDefined();
+    });
+
+    it("has a board", function(){
+        expect(game.board).toBe(gameBoard);
+    });
+
+    it("has 2 players", function(){
+        expect(game.player1).toBe(player1);
+        expect(game.player2).toBe(player2);
+    });
+
+});
+
 describe("Game board", function(){
     var gameBoard;
 
@@ -110,11 +136,10 @@ describe("Player", function(){
         expect(player1.color).toBe("green");
     });
 
-    it("makes a move on a board", function(){
+    it("makeMove updates board", function(){
         spyOn(gameBoard, "updateBoard");
         player1.makeMove(gameBoard, 0);
         expect(gameBoard.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
-
     });
 });
 
