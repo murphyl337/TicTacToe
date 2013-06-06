@@ -99,7 +99,8 @@ function Game(board, player1, player2){
     this.board.initialize();
 
     this.nextTurn = function(){
-        this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
+        if(!board.isWinner(player1.marker) && !board.isWinner(player2.marker) && !board.isDraw())
+            this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
     };
 }
 

@@ -40,6 +40,14 @@ describe("Game", function(){
         expect(board.initialize).toHaveBeenCalled();
     });
 
+    it("nextTurn checks for a winner or draw", function(){
+        spyOn(game.board, "isWinner");
+        spyOn(game.board, "isDraw");
+        game.nextTurn();
+        expect(game.board.isWinner).toHaveBeenCalled();
+        expect(game.board.isDraw).toHaveBeenCalled();
+    });
+
     it("nextTurn changes currentPlayer", function(){
         game.nextTurn();
         expect(game.currentPlayer).toBe(player2);
