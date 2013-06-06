@@ -39,6 +39,11 @@ describe("Game", function(){
         game = new Game(board, player1, player2);
         expect(board.initialize).toHaveBeenCalled();
     });
+
+    it("nextTurn changes currentPlayer", function(){
+        game.nextTurn();
+        expect(game.currentPlayer).toBe(player2);
+    });
 });
 
 describe("Game board", function(){
