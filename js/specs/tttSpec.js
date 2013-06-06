@@ -33,6 +33,13 @@ describe("Game", function(){
         expect(game.currentPlayer).toBe(player1);
     });
 
+    it("initializes the board when new game created", function(){
+        var board = new GameBoard();
+        spyOn(board, "initialize");
+        game = new Game(board, player1, player2);
+        expect(board.initialize).toHaveBeenCalled();
+    });
+
 });
 
 describe("Game board", function(){
