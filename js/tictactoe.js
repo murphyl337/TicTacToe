@@ -76,8 +76,9 @@ function Player(marker, type, color){
     this.type   = type;
     this.color  = color;
 
-    this.makeMove = function(board, position){
-        board.updateBoard(this.marker, position);
+    this.makeMove = function(game, position){
+        game.board.updateBoard(this.marker, position);
+        game.nextTurn();
     };
 }
 
@@ -88,6 +89,8 @@ function Game(board, player1, player2){
     this.currentPlayer = player1;
 
     this.board.initialize();
+
+    this.nextTurn = function(){}
 }
 
 Array.prototype.compare = function (array) {

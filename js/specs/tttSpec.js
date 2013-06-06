@@ -39,7 +39,6 @@ describe("Game", function(){
         game = new Game(board, player1, player2);
         expect(board.initialize).toHaveBeenCalled();
     });
-
 });
 
 describe("Game board", function(){
@@ -123,12 +122,14 @@ describe("Game board", function(){
 });
 
 describe("Player", function(){
-    var gameBoard;
-    var player1;
+    var game, gameBoard;
+    var player1, player2;
 
     beforeEach(function(){
         gameBoard = new GameBoard();
         player1 = new Player("X", "human", "green");
+        player2 = new Player("O", "human", "pink");
+        game = new Game(gameBoard, player1, player2);
     });
 
     it("is defined", function(){
@@ -148,14 +149,20 @@ describe("Player", function(){
     });
 
     it("makeMove updates board", function(){
-        spyOn(gameBoard, "updateBoard");
-        player1.makeMove(gameBoard, 0);
-        expect(gameBoard.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
+        spyOn(game.board, "updateBoard");
+        player1.makeMove(game, 0);
+        expect(game.board.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
+    });
+
+    it("makeMove calls game.nextTurn when complete", function(){
+        spyOn(game, "nextTurn");
+        player1.makeMove(game, 0);
+        expect(game.nextTurn).toHaveBeenCalled();
     });
 });
 
 describe("Array", function(){
-    it("compares two arrays for equivalency", function(){
+    it("compares two arrays for matching contents", function(){
         var array1 = [0,1,2];
         var array2 = [0,1,2];
         var array3 = [1,2,3];
