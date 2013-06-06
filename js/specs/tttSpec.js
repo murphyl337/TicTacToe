@@ -86,9 +86,11 @@ describe("Game board", function(){
 });
 
 describe("Player", function(){
+    var gameBoard;
     var player1;
 
     beforeEach(function(){
+        gameBoard = new GameBoard();
         player1 = new Player("X", "human", "green");
     });
 
@@ -106,6 +108,13 @@ describe("Player", function(){
 
     it("has a color", function(){
         expect(player1.color).toBe("green");
+    });
+
+    it("makes a move on a board", function(){
+        spyOn(gameBoard, "updateBoard");
+        player1.makeMove(gameBoard, 0);
+        expect(gameBoard.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
+
     });
 });
 

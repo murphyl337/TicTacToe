@@ -75,6 +75,10 @@ function Player(marker, type, color){
     this.marker = marker;
     this.type   = type;
     this.color  = color;
+
+    this.makeMove = function(board, position){
+        board.updateBoard(this.marker, position);
+    };
 }
 
 Array.prototype.compare = function (array) {
