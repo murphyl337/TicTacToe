@@ -29,6 +29,10 @@ describe("Game", function(){
         expect(game.player2).toBe(player2);
     });
 
+    it("sets the first player as the current player on start", function(){
+        expect(game.currentPlayer).toBe(player1);
+    });
+
 });
 
 describe("Game board", function(){
