@@ -115,14 +115,26 @@ function Game(board, player1, player2){
         if(this.board.isGameOver() == false){
             this.currentPlayer = this.getOtherPlayer();
             if(this.currentPlayer.type === "computer")
-                this.currentPlayer.makeMove(this, 0);
+                this.currentPlayer.makeMove(this, this.getBestMove(this.currentPlayer));
         }
     };
 
     this.getOtherPlayer = function(){
         var otherPlayer = (this.currentPlayer === this.player1) ? this.player2 : this.player1;
         return otherPlayer;
-    }
+    };
+
+    this.getBestMove = function(player){
+        return 0;
+    };
+
+    this.minimax = function(board){
+        if(board.isWinner(this.player1.marker)) return 1;
+        else if(board.isWinner(this.player2.marker)) return -1;
+        else if(board.isDraw()) return 0;
+
+
+    };
 }
 
 //function GameView(game){

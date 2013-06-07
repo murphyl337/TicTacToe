@@ -54,10 +54,12 @@ describe("Game", function(){
         expect(game.currentPlayer).not.toBe(player2);
     });
 
-    it("nextTurn will call makeMove for computer players", function(){
-        spyOn(player2, "makeMove");
-        game.nextTurn();
-        expect(player2.makeMove).toHaveBeenCalled();
+    it("minimax returns 1 for player1 win", function(){
+        spyOn(game, "minimax");
+        gameBoard = generateXDiagonalWinState();
+        game = new Game(gameBoard, player1, player2);
+        var score = game.minimax(gameBoard);
+        expect(score).toBe(1);
     });
 });
 
