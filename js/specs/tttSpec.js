@@ -137,6 +137,11 @@ describe("Game board", function(){
         expect(gameBoard.isDraw()).toBe(true);
     });
 
+    it("game is over when there is a winner or draw", function(){
+        gameBoard = generateDrawState();
+        expect(gameBoard.isGameOver()).toBe(true);
+    });
+
     describe("Space", function(){
         it("has a mark field", function(){
             expect(gameBoard.spaces[0].mark).toBeDefined();

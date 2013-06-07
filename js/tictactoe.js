@@ -72,6 +72,12 @@ function GameBoard(){
         return draw;
     };
 
+    this.isGameOver = function(){
+        var over = false;
+        if(this.isWinner("X") || this.isWinner("O") || this.isDraw()) over = true;
+        return over;
+    };
+
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
         clone.initialize();
@@ -108,14 +114,13 @@ function Game(board, player1, player2){
     this.board.initialize();
 
     this.nextTurn = function(){
-        this.changeCurrentPlayer();
-
+        if(!this.board.isGameOver()){
+            this.changeCurrentPlayer();
+        }
     };
 
     this.changeCurrentPlayer = function(){
-        if(!board.isWinner(player1.marker) && !board.isWinner(player2.marker) && !board.isDraw()){
-            this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
-        }
+        this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
     }
 }
 
