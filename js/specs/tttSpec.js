@@ -34,9 +34,8 @@ describe("Game", function(){
         expect(game.currentPlayer).toBe(player1);
     });
 
-    it("getOtherPlayer return other player (not current)", function(){
-        expect(game.currentPlayer).toBe(player1);
-        expect(game.getOtherPlayer()).toBe(player2);
+    it("getOtherPlayer return other player (not passed)", function(){
+        expect(game.getOtherPlayer(player1)).toBe(player2);
     });
 
     it("nextTurn checks for a winner or draw", function(){
@@ -84,8 +83,14 @@ describe("Game", function(){
             spyOn(game, "minimax");
             gameBoard = generateXDiagonalWinState();
             game = new Game(gameBoard, player1, player2);
-            var score = game.minimax(gameBoard);
+            var score = game.minimax(gameBoard, player1);
             expect(score).toBe(1);
+        });
+
+        it("minimax gets the other player in the game", function(){
+            spyOn(game, "getOtherPlayer");
+            game.minimax(gameBoard, player1);
+            expect(game.getOtherPlayer).toHaveBeenCalled();
         });
 
     });

@@ -113,14 +113,15 @@ function Game(board, player1, player2){
 
     this.nextTurn = function(){
         if(this.board.isGameOver() == false){
-            this.currentPlayer = this.getOtherPlayer();
+            var otherPlayer = this.getOtherPlayer(this.currentPlayer);
+            this.currentPlayer = otherPlayer;
             if(this.currentPlayer.type === "computer")
                 this.currentPlayer.makeMove(this, this.getBestMove(this.currentPlayer));
         }
     };
 
-    this.getOtherPlayer = function(){
-        var otherPlayer = (this.currentPlayer === this.player1) ? this.player2 : this.player1;
+    this.getOtherPlayer = function(player){
+        var otherPlayer = (player === this.player1) ? this.player2 : this.player1;
         return otherPlayer;
     };
 
@@ -141,12 +142,12 @@ function Game(board, player1, player2){
         return isBestScore;
     };
 
-    this.minimax = function(board){
+    this.minimax = function(board, player){
         if(board.isWinner(this.player1.marker)) return 1;
         else if(board.isWinner(this.player2.marker)) return -1;
         else if(board.isDraw()) return 0;
 
-
+        var otherPlayer = this.getOtherPlayer(player);
     };
 }
 
