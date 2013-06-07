@@ -92,7 +92,92 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+.box {
+    width:100px;
+    height:100px;
+    display:inline-block;
+    background:#eee;
+    margin:3px 1px;
+    text-align:center;
+    font-size:24px;
+    font-family:arial;
+    vertical-align:bottom;
+    line-height:450%
+}
+.box:hover {
+    cursor: pointer;
+    background:#eeefff;
+}
+a {
+    text-decoration:none;
+}
+.label {
+    position:relative;
+    bottom:0;
+    right:0
+}
+.green {
+    background:#90EE90;
+}
+.pink {
+    background:#FDCBBB;
+}
+.credit {
+    color:#333;
+    font-family:arial;
+    font-size:13px;
+    margin-top:40px;
+}
 
+#overlay {
+    position: absolute;
+    left: 400px;
+    top: 0px;
+    width:20%;
+    height:20%;
+    text-align:center;
+    z-index: 1000;
+}
+
+#overlay div {
+    width:100px;
+    margin: 100px auto;
+    background-color: #fff;
+    padding:15px;
+    text-align:center;
+    align: right;
+}
+
+.restartButton {
+    -moz-box-shadow:inset 0px 1px 0px 0px #efdcfb;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #efdcfb;
+    box-shadow:inset 0px 1px 0px 0px #efdcfb;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfbdfa), color-stop(1, #bc80ea) );
+    background:-moz-linear-gradient( center top, #dfbdfa 5%, #bc80ea 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfbdfa', endColorstr='#bc80ea');
+    background-color:#dfbdfa;
+    align: middle;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    border-radius:6px;
+    border:1px solid #c584f3;
+    display:inline-block;
+    color:#ffffff;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:1px 1px 0px #9752cc;
+}.restartButton:hover {
+     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bc80ea), color-stop(1, #dfbdfa) );
+     background:-moz-linear-gradient( center top, #bc80ea 5%, #dfbdfa 100% );
+     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bc80ea', endColorstr='#dfbdfa');
+     background-color:#bc80ea;
+ }.restartButton:active {
+      position:relative;
+      top:1px;
+  }
 
 
 

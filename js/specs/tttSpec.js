@@ -11,8 +11,8 @@ describe("Game", function(){
 
     beforeEach(function(){
         gameBoard = new GameBoard();
-        player1 = new Player("human", "X", "green");
-        player2 = new Player("computer", "O", "pink");
+        player1 = new Player("X", "human", "green");
+        player2 = new Player("O", "computer", "pink");
         game = new Game(gameBoard, player1, player2);
     });
 
@@ -31,6 +31,12 @@ describe("Game", function(){
 
     it("sets the first player as the current player on start", function(){
         expect(game.currentPlayer).toBe(player1);
+    });
+
+    it("changeCurrentPlayer switches currentPlayer", function(){
+        expect(game.currentPlayer).toBe(player1);
+        game.changeCurrentPlayer();
+        expect(game.currentPlayer).toBe(player2);
     });
 
     it("initializes the board when new game created", function(){
@@ -121,7 +127,7 @@ describe("Game board", function(){
         expect(gameBoard.isWinner("X")).toBe(true);
     });
 
-    it("game is over when all moves taken", function(){
+    it("game has no open spaces when all moves taken", function(){
         gameBoard = generateXDiagonalWinState();
         expect(gameBoard.hasOpenSpaces()).toBe(false);
     });
@@ -149,7 +155,7 @@ describe("Player", function(){
     beforeEach(function(){
         gameBoard = new GameBoard();
         player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "human", "pink");
+        player2 = new Player("O", "computer", "pink");
         game = new Game(gameBoard, player1, player2);
     });
 
@@ -169,14 +175,6 @@ describe("Player", function(){
         expect(player1.color).toBe("green");
     });
 
-    it("makeMove will not updateBoard for invalid move", function(){
-        game.board.updateBoard("X", 0);
-        spyOn(game.board, "updateBoard");
-        player1.makeMove(game, 0);
-        expect(game.board.updateBoard).not.toHaveBeenCalled();
-
-    });
-
     it("makeMove updates board", function(){
         spyOn(game.board, "updateBoard");
         player1.makeMove(game, 0);
@@ -187,6 +185,13 @@ describe("Player", function(){
         spyOn(game, "nextTurn");
         player1.makeMove(game, 0);
         expect(game.nextTurn).toHaveBeenCalled();
+    });
+
+    it("makeMove will not updateBoard for invalid move", function(){
+        game.board.updateBoard("X", 0);
+        spyOn(game.board, "updateBoard");
+        player1.makeMove(game, 0);
+        expect(game.board.updateBoard).not.toHaveBeenCalled();
     });
 });
 
@@ -208,6 +213,34 @@ describe("Array", function(){
         expect(bigArray.containsContentsOf(smallArray)).toBe(true);
     });
 });
+
+//describe("Game View", function(){
+//    var view, player1, player2, game, gameBoard;
+//
+//    beforeEach(function(){
+//        gameBoard = new GameBoard();
+//        player1 = new Player("X", "human", "green");
+//        player2 = new Player("O", "human", "pink");
+//        game = new Game(gameBoard, player1, player2);
+//        view = new GameView(game);
+//        $box = affix(".box#0");
+//    });
+//
+//    it("is defined", function(){
+//        expect(view).toBeDefined();
+//    });
+//
+//    it("has a game", function(){
+//        expect(view.game).toBeDefined();
+//    });
+//
+//    it("delegates clicks to game", function(){
+//        spyOn(player1, "makeMove");
+//        $("#0.box").trigger("click");
+//        expect(player1.makeMove).toHaveBeenCalledWith(game, 0);
+//    });
+//
+//});
 
 function generateXDiagonalWinState(){
     var board = new GameBoard();

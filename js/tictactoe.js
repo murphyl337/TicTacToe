@@ -1,3 +1,12 @@
+$(document).ready = function(){
+    var board = new GameBoard();
+    var player1 = new Player("X", "human", "green");
+    var player2 = new Player("O", "human", "pink");
+    var game = new Game(board, player1, player2);
+    var view = new GameView(game);
+};
+
+
 function GameBoard(){
     this.spaces = [];
     var boardSize = 9;
@@ -99,10 +108,25 @@ function Game(board, player1, player2){
     this.board.initialize();
 
     this.nextTurn = function(){
-        if(!board.isWinner(player1.marker) && !board.isWinner(player2.marker) && !board.isDraw())
-            this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
+        this.changeCurrentPlayer();
+
     };
+
+    this.changeCurrentPlayer = function(){
+        if(!board.isWinner(player1.marker) && !board.isWinner(player2.marker) && !board.isDraw()){
+            this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
+        }
+    }
 }
+
+//function GameView(game){
+//    this.game = game;
+//
+//    $(".box").on('click', function(event){
+//        console.log("CLICKED" + event.target.id);
+//        // this.game.currentPlayer.makeMove(this.game, event.target.id);
+//    });
+//}
 
 Array.prototype.compare = function (array) {
     if (!array)
