@@ -111,16 +111,17 @@ function Game(board, player1, player2){
     this.player2 = player2;
     this.currentPlayer = player1;
 
-    //this.board.initialize();
-
     this.nextTurn = function(){
         if(this.board.isGameOver() == false){
-            this.changeCurrentPlayer();
+            this.currentPlayer = this.getOtherPlayer();
+            if(this.currentPlayer.type === "computer")
+                this.currentPlayer.makeMove(this, 0);
         }
     };
 
-    this.changeCurrentPlayer = function(){
-        this.currentPlayer = (this.currentPlayer === player1) ? player2 : player1;
+    this.getOtherPlayer = function(){
+        var otherPlayer = (this.currentPlayer === this.player1) ? this.player2 : this.player1;
+        return otherPlayer;
     }
 }
 

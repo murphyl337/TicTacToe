@@ -34,10 +34,9 @@ describe("Game", function(){
         expect(game.currentPlayer).toBe(player1);
     });
 
-    it("changeCurrentPlayer switches currentPlayer", function(){
+    it("getOtherPlayer return other player (not current)", function(){
         expect(game.currentPlayer).toBe(player1);
-        game.changeCurrentPlayer();
-        expect(game.currentPlayer).toBe(player2);
+        expect(game.getOtherPlayer()).toBe(player2);
     });
 
     it("nextTurn checks for a winner or draw", function(){
@@ -48,16 +47,17 @@ describe("Game", function(){
         expect(game.board.isDraw).toHaveBeenCalled();
     });
 
-    it("nextTurn changes currentPlayer when game is over", function(){
-        game.nextTurn();
-        expect(game.currentPlayer).toBe(player2);
-    });
-
     it("nextTurn does not change currentPlayer when game is over", function(){
         gameBoard = generateDrawState();
         game = new Game(gameBoard, player1, player2);
         game.nextTurn();
         expect(game.currentPlayer).not.toBe(player2);
+    });
+
+    it("nextTurn will call makeMove for computer players", function(){
+        spyOn(player2, "makeMove");
+        game.nextTurn();
+        expect(player2.makeMove).toHaveBeenCalled();
     });
 });
 
