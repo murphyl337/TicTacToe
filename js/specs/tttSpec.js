@@ -54,13 +54,42 @@ describe("Game", function(){
         expect(game.currentPlayer).not.toBe(player2);
     });
 
-    it("minimax returns 1 for player1 win", function(){
-        spyOn(game, "minimax");
-        gameBoard = generateXDiagonalWinState();
-        game = new Game(gameBoard, player1, player2);
-        var score = game.minimax(gameBoard);
-        expect(score).toBe(1);
+    describe("Minimax/Move calculation", function(){
+        var game, gameBoard, player1, player2, bestScore, score;
+
+        beforeEach(function(){
+            gameBoard = new GameBoard();
+            gameBoard.initialize();
+            player1 = new Player("X", "human", "green");
+            player2 = new Player("O", "computer", "pink");
+            game = new Game(gameBoard, player1, player2);
+        });
+
+        it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
+            bestScore = game.getDefaultBestScore(player1);
+            expect(bestScore).toBe(-10000);
+            bestScore = game.getDefaultBestScore(player2);
+            expect(bestScore).toBe(10000);
+        });
+
+        it("isBestScore returns true for player1 when score is > than bestScore", function(){
+            bestScore = game.getDefaultBestScore(player1);
+            gameBoard = generateXDiagonalWinState();
+            game = new Game(gameBoard, player1, player2);
+            score = game.minimax(gameBoard);
+            expect(game.isBestScore(score, bestScore, player1)).toBe(true);
+        });
+
+        it("minimax returns 1 for player1 win", function(){
+            spyOn(game, "minimax");
+            gameBoard = generateXDiagonalWinState();
+            game = new Game(gameBoard, player1, player2);
+            var score = game.minimax(gameBoard);
+            expect(score).toBe(1);
+        });
+
     });
+
 });
 
 describe("Game board", function(){

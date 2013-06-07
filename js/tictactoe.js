@@ -128,6 +128,19 @@ function Game(board, player1, player2){
         return 0;
     };
 
+    this.getDefaultBestScore = function(player){
+        return (player === this.player1) ? -10000 : 10000;
+    };
+
+    this.isBestScore = function(score, bestScore, player){
+        var isBestScore = false;
+        if(player === player1)
+            if(score > bestScore) isBestScore = true;
+        else
+            if(score < bestScore) isBestScore = true;
+        return isBestScore;
+    };
+
     this.minimax = function(board){
         if(board.isWinner(this.player1.marker)) return 1;
         else if(board.isWinner(this.player2.marker)) return -1;
