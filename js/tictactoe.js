@@ -111,10 +111,10 @@ function Game(board, player1, player2){
     this.player2 = player2;
     this.currentPlayer = player1;
 
-    this.board.initialize();
+    //this.board.initialize();
 
     this.nextTurn = function(){
-        if(!this.board.isGameOver()){
+        if(this.board.isGameOver() == false){
             this.changeCurrentPlayer();
         }
     };

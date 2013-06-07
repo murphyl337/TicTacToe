@@ -11,6 +11,7 @@ describe("Game", function(){
 
     beforeEach(function(){
         gameBoard = new GameBoard();
+        gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
         game = new Game(gameBoard, player1, player2);
@@ -39,13 +40,6 @@ describe("Game", function(){
         expect(game.currentPlayer).toBe(player2);
     });
 
-    it("initializes the board when new game created", function(){
-        var board = new GameBoard();
-        spyOn(board, "initialize");
-        game = new Game(board, player1, player2);
-        expect(board.initialize).toHaveBeenCalled();
-    });
-
     it("nextTurn checks for a winner or draw", function(){
         spyOn(game.board, "isWinner");
         spyOn(game.board, "isDraw");
@@ -54,9 +48,16 @@ describe("Game", function(){
         expect(game.board.isDraw).toHaveBeenCalled();
     });
 
-    it("nextTurn changes currentPlayer", function(){
+    it("nextTurn changes currentPlayer when game is over", function(){
         game.nextTurn();
         expect(game.currentPlayer).toBe(player2);
+    });
+
+    it("nextTurn does not change currentPlayer when game is over", function(){
+        gameBoard = generateDrawState();
+        game = new Game(gameBoard, player1, player2);
+        game.nextTurn();
+        expect(game.currentPlayer).not.toBe(player2);
     });
 });
 
@@ -159,6 +160,7 @@ describe("Player", function(){
 
     beforeEach(function(){
         gameBoard = new GameBoard();
+        gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
         game = new Game(gameBoard, player1, player2);
