@@ -1,10 +1,12 @@
-$(document).ready = function(){
+$(document).ready(function(){
     var board = new GameBoard();
     var player1 = new Player("X", "human", "green");
     var player2 = new Player("O", "human", "pink");
+    board.initialize();
     var game = new Game(board, player1, player2);
     var view = new GameView(game);
-};
+    view.initialize();
+});
 
 
 function GameBoard(){
@@ -148,17 +150,24 @@ function Game(board, player1, player2){
         else if(board.isDraw()) return 0;
 
         var otherPlayer = this.getOtherPlayer(player);
+        var availableSpaces = board.getAvailableSpaces();
     };
 }
 
-//function GameView(game){
-//    this.game = game;
-//
-//    $(".box").on('click', function(event){
-//        console.log("CLICKED" + event.target.id);
-//        // this.game.currentPlayer.makeMove(this.game, event.target.id);
-//    });
-//}
+function GameView(game){
+    this.game = game;
+
+
+    this.initialize = function(){
+        $box = $(".box");
+        $box.on("click", handleClick);
+    };
+
+    var handleClick = function(event) {
+        console.log("box " + event.target.id + " was clicked");
+        game.currentPlayer.makeMove(game, event.target.id);
+    };
+}
 
 Array.prototype.compare = function (array) {
     if (!array)

@@ -52,49 +52,6 @@ describe("Game", function(){
         game.nextTurn();
         expect(game.currentPlayer).not.toBe(player2);
     });
-
-    describe("Minimax/Move calculation", function(){
-        var game, gameBoard, player1, player2, bestScore, score;
-
-        beforeEach(function(){
-            gameBoard = new GameBoard();
-            gameBoard.initialize();
-            player1 = new Player("X", "human", "green");
-            player2 = new Player("O", "computer", "pink");
-            game = new Game(gameBoard, player1, player2);
-        });
-
-        it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
-            bestScore = game.getDefaultBestScore(player1);
-            expect(bestScore).toBe(-10000);
-            bestScore = game.getDefaultBestScore(player2);
-            expect(bestScore).toBe(10000);
-        });
-
-        it("isBestScore returns true for player1 when score is > than bestScore", function(){
-            bestScore = game.getDefaultBestScore(player1);
-            gameBoard = generateXDiagonalWinState();
-            game = new Game(gameBoard, player1, player2);
-            score = game.minimax(gameBoard);
-            expect(game.isBestScore(score, bestScore, player1)).toBe(true);
-        });
-
-        it("minimax returns 1 for player1 win", function(){
-            spyOn(game, "minimax");
-            gameBoard = generateXDiagonalWinState();
-            game = new Game(gameBoard, player1, player2);
-            var score = game.minimax(gameBoard, player1);
-            expect(score).toBe(1);
-        });
-
-        it("minimax gets the other player in the game", function(){
-            spyOn(game, "getOtherPlayer");
-            game.minimax(gameBoard, player1);
-            expect(game.getOtherPlayer).toHaveBeenCalled();
-        });
-
-    });
-
 });
 
 describe("Game board", function(){
@@ -167,6 +124,9 @@ describe("Game board", function(){
     it("game has no open spaces when all moves taken", function(){
         gameBoard = generateXDiagonalWinState();
         expect(gameBoard.hasOpenSpaces()).toBe(false);
+
+        gameBoard.initialize();
+        expect(gameBoard.hasOpenSpaces()).toBe(true);
     });
 
     it("determines draw when all moves taken and no one is winner", function(){
@@ -238,6 +198,58 @@ describe("Player", function(){
     });
 });
 
+describe("Minimax/Move calculation", function(){
+    var game, gameBoard, player1, player2, bestScore, score;
+    var isWinSpy, isDrawSpy, getOtherPlayerSpy, getAvaliableSpaceSpy
+
+    beforeEach(function(){
+        gameBoard = new GameBoard();
+        gameBoard.initialize();
+        player1 = new Player("X", "human", "green");
+        player2 = new Player("O", "computer", "pink");
+        game = new Game(gameBoard, player1, player2);
+        isWinSpy = spyOn(gameBoard, "isWinner");
+        isDrawSpy = spyOn(gameBoard, "isDraw");
+    });
+
+    it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
+        bestScore = game.getDefaultBestScore(player1);
+        expect(bestScore).toBe(-10000);
+        bestScore = game.getDefaultBestScore(player2);
+        expect(bestScore).toBe(10000);
+    });
+
+    it("isBestScore returns true for player1 when score is > than bestScore", function(){
+        bestScore = game.getDefaultBestScore(player1);
+        gameBoard = generateXDiagonalWinState();
+        game = new Game(gameBoard, player1, player2);
+        score = game.minimax(gameBoard);
+        expect(game.isBestScore(score, bestScore, player1)).toBe(true);
+    });
+
+    it("minimax returns 1 for player1 win", function(){
+        spyOn(game, "minimax");
+        gameBoard = generateXDiagonalWinState();
+        game = new Game(gameBoard, player1, player2);
+        var score = game.minimax(gameBoard, player1);
+        expect(score).toBe(1);
+    });
+
+    it("minimax gets the other player in the game for recursion", function(){
+        spyOn(game, "getOtherPlayer");
+        game.minimax(gameBoard, player1);
+        expect(game.getOtherPlayer).toHaveBeenCalled();
+    });
+
+    it("minimax gets available spaces of passed board", function(){
+        spyOn(gameBoard, "getAvailableSpaces");
+        game = new Game(gameBoard, player1, player2);
+        game.minimax(gameBoard, player1);
+        expect(gameBoard.getAvailableSpaces).toHaveBeenCalled();
+    });
+
+});
+
 describe("Array", function(){
     it("compares two arrays for matching contents", function(){
         var array1 = [0,1,2];
@@ -257,33 +269,38 @@ describe("Array", function(){
     });
 });
 
-//describe("Game View", function(){
-//    var view, player1, player2, game, gameBoard;
-//
-//    beforeEach(function(){
-//        gameBoard = new GameBoard();
-//        player1 = new Player("X", "human", "green");
-//        player2 = new Player("O", "human", "pink");
-//        game = new Game(gameBoard, player1, player2);
-//        view = new GameView(game);
-//        $box = affix(".box#0");
-//    });
-//
-//    it("is defined", function(){
-//        expect(view).toBeDefined();
-//    });
-//
-//    it("has a game", function(){
-//        expect(view.game).toBeDefined();
-//    });
-//
-//    it("delegates clicks to game", function(){
-//        spyOn(player1, "makeMove");
-//        $("#0.box").trigger("click");
-//        expect(player1.makeMove).toHaveBeenCalledWith(game, 0);
-//    });
-//
-//});
+describe("Game View", function(){
+    var view, player1, player2, game, gameBoard;
+    var clickSpy;
+
+    beforeEach(function(){
+        gameBoard = new GameBoard();
+        gameBoard.initialize();
+        player1 = new Player("X", "human", "green");
+        player2 = new Player("O", "human", "pink");
+        game = new Game(gameBoard, player1, player2);
+        view = new GameView(game);
+        view.initialize();
+        $box = affix(".box#0");
+        clickSpy = spyOnEvent($box, 'click');
+    });
+
+    it("is defined", function(){
+        expect(view).toBeDefined();
+    });
+
+    it("has a game", function(){
+        expect(view.game).toBeDefined();
+    });
+
+    it("will trigger click event when box is clicked", function(){
+        $box.click();
+        expect('click').toHaveBeenTriggeredOn($box);
+        expect(clickSpy).toHaveBeenTriggered();
+    });
+
+
+});
 
 function generateXDiagonalWinState(){
     var board = new GameBoard();
