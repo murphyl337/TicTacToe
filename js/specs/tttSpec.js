@@ -15,8 +15,8 @@ describe("Game", function(){
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
         view = new GameView();
-        view.listen();
         game = new Game(view, gameBoard, player1, player2);
+        game.listen();
     });
 
     it("is defined", function(){
@@ -168,8 +168,8 @@ describe("Player", function(){
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "human", "pink");
         view = new GameView();
-        view.listen();
         game = new Game(view, gameBoard, player1, player2);
+        game.listen();
     });
 
     it("is defined", function(){
@@ -220,8 +220,8 @@ describe("Minimax/Move calculation", function(){
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
         view = new GameView();
-        view.listen();
         game = new Game(view, gameBoard, player1, player2);
+        game.listen();
     });
 
     it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
@@ -283,9 +283,8 @@ describe("Game View", function(){
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "human", "pink");
         view = new GameView();
-        view.listen();
         game = new Game(view, gameBoard, player1, player2);
-        handleClickSpy = spyOn(view, "handleClick");
+        game.listen();
     });
 
     it("is defined", function(){
@@ -293,6 +292,7 @@ describe("Game View", function(){
     });
 
     it("will handle click event when box is clicked", function(){
+        spyOn(view, "handleClick");
         $box.click();
         expect(view.handleClick).toHaveBeenCalled();
     });

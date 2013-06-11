@@ -4,8 +4,8 @@ $(document).ready(function(){
     var player2 = new Player("O", "computer", "pink");
     board.initialize();
     var view = new GameView();
-    view.listen();
     var game = new Game(view, board, player1, player2);
+    game.listen();
 });
 
 
@@ -116,6 +116,18 @@ function Game(view, board, player1, player2){
     this.player2 = player2;
     this.currentPlayer = player1;
 
+    this.listen = function(){
+        var $box = $(".box");
+        $box.on('click', this.handleClick);
+    };
+
+    this.handleClick = function(event){
+        if(this.board.isValidMove(event.target.id)){
+            view.update(event.target, this.currentPlayer);
+            this.currentPlayer.makeMove(this, event.target.id);
+        }
+    };
+
     this.nextTurn = function(){
         if(this.board.isGameOver() == false){
             var otherPlayer = this.getOtherPlayer(this.currentPlayer);
@@ -147,6 +159,7 @@ function Game(view, board, player1, player2){
     };
 
     this.getBestMove = function(board, player){
+        var otherPlayer = this.getOtherPlayer(player);
         var otherPlayer = this.getOtherPlayer(player);
         var availableSpaces = board.getAvailableSpaces();
         var bestMove;
@@ -186,19 +199,9 @@ function Game(view, board, player1, player2){
     };
 }
 
-function GameView(game){
-    this.game = game;
-
-    this.listen = function(){
-        var $box = $(".box");
-        $box.on('click', this.handleClick);
-    };
-
-    this.handleClick = function(event) {
-        if(game.board.isValidMove(event.target.id)){
-            markBox(event.target, game.currentPlayer);
-            game.currentPlayer.makeMove(game, event.target.id);
-        }
+function GameView(){
+    this.update = function(box, player){
+        markBox(box, player);
     };
 
     var markBox = function(box, player){
