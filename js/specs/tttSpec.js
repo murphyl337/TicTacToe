@@ -7,9 +7,10 @@
  */
 
 describe("Game", function(){
-    var game, gameBoard, player1, player2, view;
+    var game, gameBoard, player1, player2, view, $box;
 
     beforeEach(function(){
+        $box = affix(".box#0");
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
@@ -44,12 +45,20 @@ describe("Game", function(){
         expect(game.getOtherPlayer(player1)).toBe(player2);
     });
 
+    it("handles click when box is clicked", function(){
+        $box.click();
+
+        expect($box).toHandleWith('click', game.handleClick);
+    });
+
     it("nextTurn checks for a winner or draw", function(){
         spyOn(gameBoard, "isWinner");
         spyOn(gameBoard, "isDraw");
         spyOn(player1, "makeMove");
         spyOn(gameBoard, "isValidMove");
+
         game.nextTurn();
+
         expect(gameBoard.isWinner).toHaveBeenCalled();
         expect(gameBoard.isDraw).toHaveBeenCalled();
     });
@@ -57,7 +66,9 @@ describe("Game", function(){
     it("nextTurn does not change currentPlayer when game is over", function(){
         gameBoard = generateDrawState();
         game = new Game(view, gameBoard, player1, player2);
+
         game.nextTurn();
+
         expect(game.currentPlayer).not.toBe(player2);
     });
 });
@@ -289,12 +300,6 @@ describe("Game View", function(){
 
     it("is defined", function(){
         expect(view).toBeDefined();
-    });
-
-    it("will handle click event when box is clicked", function(){
-        spyOn(view, "handleClick");
-        $box.click();
-        expect(view.handleClick).toHaveBeenCalled();
     });
 });
 

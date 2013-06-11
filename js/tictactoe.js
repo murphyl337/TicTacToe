@@ -115,17 +115,16 @@ function Game(view, board, player1, player2){
     this.player1 = player1;
     this.player2 = player2;
     this.currentPlayer = player1;
+    var game = this;
 
     this.listen = function(){
         var $box = $(".box");
-        $box.on('click', this.handleClick);
+        $box.on('click', game.handleClick);
     };
 
     this.handleClick = function(event){
-        if(this.board.isValidMove(event.target.id)){
-            view.update(event.target, this.currentPlayer);
-            this.currentPlayer.makeMove(this, event.target.id);
-        }
+        game.currentPlayer.makeMove(game, event.target.id);
+        view.update(event.target, game.currentPlayer);
     };
 
     this.nextTurn = function(){
