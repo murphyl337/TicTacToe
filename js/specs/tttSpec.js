@@ -7,18 +7,24 @@
  */
 
 describe("Game", function(){
-    var game, gameBoard, player1, player2;
+    var game, gameBoard, player1, player2, view;
 
     beforeEach(function(){
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
-        game = new Game(gameBoard, player1, player2);
+        view = new GameView();
+        view.listen();
+        game = new Game(view, gameBoard, player1, player2);
     });
 
     it("is defined", function(){
         expect(game).toBeDefined();
+    });
+
+    it("has a view", function(){
+        expect(game.view).toBeDefined();
     });
 
     it("has a board", function(){
@@ -39,16 +45,18 @@ describe("Game", function(){
     });
 
     it("nextTurn checks for a winner or draw", function(){
-        spyOn(game.board, "isWinner");
-        spyOn(game.board, "isDraw");
+        spyOn(gameBoard, "isWinner");
+        spyOn(gameBoard, "isDraw");
+        spyOn(player1, "makeMove");
+        spyOn(gameBoard, "isValidMove");
         game.nextTurn();
-        expect(game.board.isWinner).toHaveBeenCalled();
-        expect(game.board.isDraw).toHaveBeenCalled();
+        expect(gameBoard.isWinner).toHaveBeenCalled();
+        expect(gameBoard.isDraw).toHaveBeenCalled();
     });
 
     it("nextTurn does not change currentPlayer when game is over", function(){
         gameBoard = generateDrawState();
-        game = new Game(gameBoard, player1, player2);
+        game = new Game(view, gameBoard, player1, player2);
         game.nextTurn();
         expect(game.currentPlayer).not.toBe(player2);
     });
@@ -151,15 +159,17 @@ describe("Game board", function(){
 });
 
 describe("Player", function(){
-    var game, gameBoard;
+    var game, gameBoard, view;
     var player1, player2;
 
     beforeEach(function(){
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "computer", "pink");
-        game = new Game(gameBoard, player1, player2);
+        player2 = new Player("O", "human", "pink");
+        view = new GameView();
+        view.listen();
+        game = new Game(view, gameBoard, player1, player2);
     });
 
     it("is defined", function(){
@@ -179,7 +189,7 @@ describe("Player", function(){
     });
 
     it("makeMove updates board", function(){
-        spyOn(game.board, "updateBoard");
+        spyOn(gameBoard, "updateBoard");
         player1.makeMove(game, 0);
         expect(game.board.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
     });
@@ -196,20 +206,22 @@ describe("Player", function(){
         player1.makeMove(game, 0);
         expect(game.board.updateBoard).not.toHaveBeenCalled();
     });
+
+
 });
 
 describe("Minimax/Move calculation", function(){
-    var game, gameBoard, player1, player2, bestScore, score;
-    var isWinSpy, isDrawSpy, getOtherPlayerSpy, getAvaliableSpaceSpy
+    var game, gameBoard, player1, player2, view;
+    var bestScore, score;
 
     beforeEach(function(){
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
-        game = new Game(gameBoard, player1, player2);
-        isWinSpy = spyOn(gameBoard, "isWinner");
-        isDrawSpy = spyOn(gameBoard, "isDraw");
+        view = new GameView();
+        view.listen();
+        game = new Game(view, gameBoard, player1, player2);
     });
 
     it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
@@ -222,32 +234,23 @@ describe("Minimax/Move calculation", function(){
     it("isBestScore returns true for player1 when score is > than bestScore", function(){
         bestScore = game.getDefaultBestScore(player1);
         gameBoard = generateXDiagonalWinState();
-        game = new Game(gameBoard, player1, player2);
+        game = new Game(view, gameBoard, player1, player2);
         score = game.minimax(gameBoard);
         expect(game.isBestScore(score, bestScore, player1)).toBe(true);
     });
 
     it("minimax returns 1 for player1 win", function(){
-        spyOn(game, "minimax");
         gameBoard = generateXDiagonalWinState();
-        game = new Game(gameBoard, player1, player2);
+        game = new Game(view, gameBoard, player1, player2);
         var score = game.minimax(gameBoard, player1);
         expect(score).toBe(1);
     });
 
-    it("minimax gets the other player in the game for recursion", function(){
-        spyOn(game, "getOtherPlayer");
-        game.minimax(gameBoard, player1);
-        expect(game.getOtherPlayer).toHaveBeenCalled();
+    it("getBestMove will return center space when corner space taken", function(){
+        gameBoard.updateBoard(player1.marker, 0);
+        var move = game.getBestMove(gameBoard, player2);
+        expect(move).toBe(4);
     });
-
-    it("minimax gets available spaces of passed board", function(){
-        spyOn(gameBoard, "getAvailableSpaces");
-        game = new Game(gameBoard, player1, player2);
-        game.minimax(gameBoard, player1);
-        expect(gameBoard.getAvailableSpaces).toHaveBeenCalled();
-    });
-
 });
 
 describe("Array", function(){
@@ -270,36 +273,29 @@ describe("Array", function(){
 });
 
 describe("Game View", function(){
-    var view, player1, player2, game, gameBoard;
-    var clickSpy;
+    var view, player1, player2, game, gameBoard, $box;
+    var handleClickSpy;
 
     beforeEach(function(){
+        $box = affix(".box#0");
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "human", "pink");
-        game = new Game(gameBoard, player1, player2);
-        view = new GameView(game);
-        view.initialize();
-        $box = affix(".box#0");
-        clickSpy = spyOnEvent($box, 'click');
+        view = new GameView();
+        view.listen();
+        game = new Game(view, gameBoard, player1, player2);
+        handleClickSpy = spyOn(view, "handleClick");
     });
 
     it("is defined", function(){
         expect(view).toBeDefined();
     });
 
-    it("has a game", function(){
-        expect(view.game).toBeDefined();
-    });
-
-    it("will trigger click event when box is clicked", function(){
+    it("will handle click event when box is clicked", function(){
         $box.click();
-        expect('click').toHaveBeenTriggeredOn($box);
-        expect(clickSpy).toHaveBeenTriggered();
+        expect(view.handleClick).toHaveBeenCalled();
     });
-
-
 });
 
 function generateXDiagonalWinState(){

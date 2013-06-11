@@ -1,11 +1,11 @@
 $(document).ready(function(){
     var board = new GameBoard();
     var player1 = new Player("X", "human", "green");
-    var player2 = new Player("O", "human", "pink");
+    var player2 = new Player("O", "computer", "pink");
     board.initialize();
-    var game = new Game(board, player1, player2);
-    var view = new GameView(game);
-    view.initialize();
+    var view = new GameView();
+    view.listen();
+    var game = new Game(view, board, player1, player2);
 });
 
 
@@ -83,8 +83,10 @@ function GameBoard(){
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
         clone.initialize();
-        for(var space=0; space<boardSize; space++)
-            clone.spaces[space] = this.spaces[space];
+        for(var space=0; space<boardSize; space++){
+            clone.spaces[space].mark = this.spaces[space].mark;
+            clone.spaces[space].position = this.spaces[space].position;
+        }
         return clone;
     };
 }
@@ -107,7 +109,8 @@ function Player(marker, type, color){
     };
 }
 
-function Game(board, player1, player2){
+function Game(view, board, player1, player2){
+    this.view = view;
     this.board   = board;
     this.player1 = player1;
     this.player2 = player2;
@@ -118,7 +121,7 @@ function Game(board, player1, player2){
             var otherPlayer = this.getOtherPlayer(this.currentPlayer);
             this.currentPlayer = otherPlayer;
             if(this.currentPlayer.type === "computer")
-                this.currentPlayer.makeMove(this, this.getBestMove(this.currentPlayer));
+                this.currentPlayer.makeMove(this, this.getBestMove(this.board, this.currentPlayer));
         }
     };
 
@@ -127,9 +130,6 @@ function Game(board, player1, player2){
         return otherPlayer;
     };
 
-    this.getBestMove = function(player){
-        return 0;
-    };
 
     this.getDefaultBestScore = function(player){
         return (player === this.player1) ? -10000 : 10000;
@@ -137,11 +137,32 @@ function Game(board, player1, player2){
 
     this.isBestScore = function(score, bestScore, player){
         var isBestScore = false;
-        if(player === player1)
+        if(player === this.player1){
             if(score > bestScore) isBestScore = true;
-        else
+        }
+        else if(player === this.player2){
             if(score < bestScore) isBestScore = true;
+        }
         return isBestScore;
+    };
+
+    this.getBestMove = function(board, player){
+        var otherPlayer = this.getOtherPlayer(player);
+        var availableSpaces = board.getAvailableSpaces();
+        var bestMove;
+        var bestScore = this.getDefaultBestScore(player);
+
+        for(var space = 0; space < availableSpaces.length; space++){
+            var gameBoardChild = board.clone();
+            gameBoardChild.updateBoard(player.marker, availableSpaces[space].position);
+            var currentScore = this.minimax(gameBoardChild, otherPlayer);
+            var isBestScore = this.isBestScore(currentScore, bestScore, player);
+            if(isBestScore){
+                bestScore = currentScore;
+                bestMove = availableSpaces[space].position;
+            }
+        }
+        return bestMove;
     };
 
     this.minimax = function(board, player){
@@ -151,21 +172,38 @@ function Game(board, player1, player2){
 
         var otherPlayer = this.getOtherPlayer(player);
         var availableSpaces = board.getAvailableSpaces();
+        var bestScore = this.getDefaultBestScore(player);
+
+        for(var space = 0; space < availableSpaces.length; space++){
+            var gameBoardChild = board.clone();
+            gameBoardChild.updateBoard(player.marker, availableSpaces[space].position);
+            var score = this.minimax(gameBoardChild, otherPlayer);
+            var isBestScore = this.isBestScore(score, bestScore, player);
+            if(isBestScore)
+                bestScore = score;
+        }
+        return bestScore;
     };
 }
 
 function GameView(game){
     this.game = game;
 
-
-    this.initialize = function(){
-        $box = $(".box");
-        $box.on("click", handleClick);
+    this.listen = function(){
+        var $box = $(".box");
+        $box.on('click', this.handleClick);
     };
 
-    var handleClick = function(event) {
-        console.log("box " + event.target.id + " was clicked");
-        game.currentPlayer.makeMove(game, event.target.id);
+    this.handleClick = function(event) {
+        if(game.board.isValidMove(event.target.id)){
+            markBox(event.target, game.currentPlayer);
+            game.currentPlayer.makeMove(game, event.target.id);
+        }
+    };
+
+    var markBox = function(box, player){
+        box.innerHTML = player.marker;
+        box.className += " " + player.color;
     };
 }
 
