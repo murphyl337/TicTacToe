@@ -1,13 +1,21 @@
 $(document).ready(function(){
-    var board = new GameBoard();
-    var player1 = new Player("X", "human", "green");
-    var player2 = new Player("O", "computer", "pink");
-    board.initialize();
-    var view = new GameView();
-    var game = new Game(view, board, player1, player2);
+    var game = startGame();
+    if(game.currentPlayer.type === 'computer'){
+        var move = game.getBestMove(game.board, game.currentPlayer);
+        game.currentPlayer.makeMove(game, move);
+    }
+
     game.listen();
 });
 
+function startGame(){
+    var board = new GameBoard();
+    var player1 = new Player("X", "computer", "green");
+    var player2 = new Player("O", "computer", "pink");
+    board.initialize();
+    var view = new GameView();
+    return new Game(view, board, player1, player2);
+}
 
 function GameBoard(){
     this.spaces = [];
@@ -112,8 +120,10 @@ function Player(marker, type, color){
     this.color  = color;
 
     this.makeMove = function(game, position){
+        var box = document.getElementById(position);
         if(game.board.isValidMove(position)){
             game.board.updateBoard(this.marker, position);
+            game.view.update(box, this);
             game.nextTurn();
         }
     };
@@ -136,8 +146,10 @@ function Game(view, board, player1, player2){
 
     this.handleClick = function(event){
         if(!game.board.isGameOver()){
-            game.currentPlayer.makeMove(game, event.target.id);
-            game.view.update(event.target, game.currentPlayer);
+            if(game.board.isValidMove(event.target.id)){
+                game.currentPlayer.makeMove(game, event.target.id);
+                //game.view.update(event.target, game.currentPlayer);
+            }
         }
     };
 
@@ -145,6 +157,12 @@ function Game(view, board, player1, player2){
         game.board.initialize();
         game.currentPlayer = game.player1;
         game.view.clearView();
+        if(game.currentPlayer.type === 'computer')
+            game.currentPlayer.makeMove(game, 0);
+    };
+
+    this.isFirstMove = function(){
+        return (game.board.getAvailableSpaces().length == 9);
     };
 
     this.nextTurn = function(){

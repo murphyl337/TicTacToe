@@ -46,6 +46,10 @@ describe("Game", function(){
         expect(game.getOtherPlayer(player1)).toBe(player2);
     });
 
+    it("should return true for firstMove if every space is available", function(){
+        expect(game.isFirstMove()).toBe(true);
+    });
+
     it("should handle click when box is clicked", function(){
         spyOn(player1, "makeMove");
         spyOn(game, "nextTurn");
@@ -218,20 +222,28 @@ describe("Player", function(){
 
     it("should update board when player makes move", function(){
         spyOn(gameBoard, "updateBoard");
+        spyOn(view, 'update');
+
         player1.makeMove(game, 0);
+
         expect(game.board.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
     });
 
     it("should call game.nextTurn when complete", function(){
         spyOn(game, "nextTurn");
+        spyOn(view, 'update');
+
         player1.makeMove(game, 0);
+
         expect(game.nextTurn).toHaveBeenCalled();
     });
 
     it("should not updateBoard when making invalid move", function(){
         game.board.updateBoard("X", 0);
         spyOn(game.board, "updateBoard");
+
         player1.makeMove(game, 0);
+
         expect(game.board.updateBoard).not.toHaveBeenCalled();
     });
 });
