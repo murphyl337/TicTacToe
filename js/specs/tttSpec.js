@@ -66,15 +66,6 @@ describe("Game", function(){
         expect(gameBoard.isWinner).toHaveBeenCalled();
         expect(gameBoard.isDraw).toHaveBeenCalled();
     });
-
-    it("nextTurn does not change currentPlayer when game is over", function(){
-        gameBoard = generateDrawState();
-        game = new Game(view, gameBoard, player1, player2);
-
-        game.nextTurn();
-
-        expect(game.currentPlayer).not.toBe(player2);
-    });
 });
 
 describe("Game board", function(){
@@ -328,7 +319,7 @@ describe("Game View", function(){
         game.nextTurn();
 
 
-        expect(view.overlay).toHaveBeenCalled();
+        expect(view.overlay).toHaveBeenCalledWith("X is winner");
     });
 });
 

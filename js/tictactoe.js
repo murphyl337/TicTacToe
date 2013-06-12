@@ -1,6 +1,6 @@
 $(document).ready(function(){
     var board = new GameBoard();
-    var player1 = new Player("X", "computer", "green");
+    var player1 = new Player("X", "human", "green");
     var player2 = new Player("O", "computer", "pink");
     board.initialize();
     var view = new GameView();
@@ -140,9 +140,10 @@ function Game(view, board, player1, player2){
     };
 
     this.nextTurn = function(){
+        var otherPlayer = this.getOtherPlayer(this.currentPlayer);
+        this.currentPlayer = otherPlayer;
+
         if(this.board.isGameOver() == false){
-            var otherPlayer = this.getOtherPlayer(this.currentPlayer);
-            this.currentPlayer = otherPlayer;
             if(this.currentPlayer.type === "computer"){
                 var move = game.getBestMove(game.board, game.currentPlayer);
                 var box = document.getElementById(move);
@@ -221,7 +222,7 @@ function GameView(){
     };
 
     this.overlay = function(message){
-        $("#overlay").text(message);
+        $("#info").text(message);
     };
 
     var markBox = function(box, player){
