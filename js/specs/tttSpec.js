@@ -66,6 +66,18 @@ describe("Game", function(){
         expect(gameBoard.isWinner).toHaveBeenCalled();
         expect(gameBoard.isDraw).toHaveBeenCalled();
     });
+
+    it("should end in draw for computer vs. computer", function(){
+        spyOn(view, "update");
+        spyOn(view, "overlay");
+        player1 = new Player("X", "computer", "green");
+        player2 = new Player("O", "computer", "pink");
+        game = new Game(view, gameBoard, player1, player2);
+
+        player1.makeMove(game, 0);
+
+        expect(game.board.isDraw()).toBe(true);
+    });
 });
 
 describe("Game board", function(){
