@@ -124,15 +124,19 @@ function Game(view, board, player1, player2){
 
     this.handleClick = function(event){
         game.currentPlayer.makeMove(game, event.target.id);
-        view.update(event.target, game.currentPlayer);
+        game.view.update(event.target, game.currentPlayer);
     };
 
     this.nextTurn = function(){
         if(this.board.isGameOver() == false){
             var otherPlayer = this.getOtherPlayer(this.currentPlayer);
             this.currentPlayer = otherPlayer;
-            if(this.currentPlayer.type === "computer")
-                this.currentPlayer.makeMove(this, this.getBestMove(this.board, this.currentPlayer));
+            if(this.currentPlayer.type === "computer"){
+                var move = game.getBestMove(game.board, game.currentPlayer);
+                var box = document.getElementById(move);
+                game.view.update(box, game.currentPlayer);
+                this.currentPlayer.makeMove(game, move);
+            }
         }
     };
 
@@ -158,7 +162,6 @@ function Game(view, board, player1, player2){
     };
 
     this.getBestMove = function(board, player){
-        var otherPlayer = this.getOtherPlayer(player);
         var otherPlayer = this.getOtherPlayer(player);
         var availableSpaces = board.getAvailableSpaces();
         var bestMove;

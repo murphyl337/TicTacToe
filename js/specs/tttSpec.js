@@ -217,8 +217,6 @@ describe("Player", function(){
         player1.makeMove(game, 0);
         expect(game.board.updateBoard).not.toHaveBeenCalled();
     });
-
-
 });
 
 describe("Minimax/Move calculation", function(){
@@ -238,6 +236,7 @@ describe("Minimax/Move calculation", function(){
     it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
         bestScore = game.getDefaultBestScore(player1);
         expect(bestScore).toBe(-10000);
+
         bestScore = game.getDefaultBestScore(player2);
         expect(bestScore).toBe(10000);
     });
@@ -246,20 +245,25 @@ describe("Minimax/Move calculation", function(){
         bestScore = game.getDefaultBestScore(player1);
         gameBoard = generateXDiagonalWinState();
         game = new Game(view, gameBoard, player1, player2);
+
         score = game.minimax(gameBoard);
+
         expect(game.isBestScore(score, bestScore, player1)).toBe(true);
     });
 
     it("minimax returns 1 for player1 win", function(){
         gameBoard = generateXDiagonalWinState();
         game = new Game(view, gameBoard, player1, player2);
+
         var score = game.minimax(gameBoard, player1);
+
         expect(score).toBe(1);
     });
 
     it("getBestMove will return center space when corner space taken", function(){
         gameBoard.updateBoard(player1.marker, 0);
         var move = game.getBestMove(gameBoard, player2);
+
         expect(move).toBe(4);
     });
 });
@@ -284,15 +288,14 @@ describe("Array", function(){
 });
 
 describe("Game View", function(){
-    var view, player1, player2, game, gameBoard, $box;
-    var handleClickSpy;
+    var view, player1, player2, game, gameBoard;
 
     beforeEach(function(){
-        $box = affix(".box#0");
+
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "human", "pink");
+        player2 = new Player("O", "computer", "pink");
         view = new GameView();
         game = new Game(view, gameBoard, player1, player2);
         game.listen();
@@ -300,6 +303,15 @@ describe("Game View", function(){
 
     it("is defined", function(){
         expect(view).toBeDefined();
+    });
+
+    it("should update when computer player makes move", function(){
+        spyOn(view, "update");
+        spyOn(game, "getBestMove").andReturn(4);
+
+        player1.makeMove(game, 0);
+
+        expect(view.update).toHaveBeenCalled();
     });
 });
 
