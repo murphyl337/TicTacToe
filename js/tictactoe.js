@@ -146,10 +146,8 @@ function Game(view, board, player1, player2){
 
     this.handleClick = function(event){
         if(!game.board.isGameOver()){
-            if(game.board.isValidMove(event.target.id)){
+            if(game.board.isValidMove(event.target.id))
                 game.currentPlayer.makeMove(game, event.target.id);
-                //game.view.update(event.target, game.currentPlayer);
-            }
         }
     };
 

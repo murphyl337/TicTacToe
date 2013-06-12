@@ -118,24 +118,30 @@ describe("Game board", function(){
 
     it("should change the mark on a space when updated", function(){
         gameBoard.updateBoard("X", 0);
+
         expect(gameBoard.spaces[0].mark).toBe("X");
     });
 
     it("should return true for available space, false if taken for isValidMove", function(){
         var valid = gameBoard.isValidMove(0);
+
         expect(valid).toBe(true);
+
         gameBoard.updateBoard("X", 5);
         valid = gameBoard.isValidMove(5);
+
         expect(valid).toBe(false);
     });
 
     it("should return all spaces that haven't been taken when getAvailableSpaces is called", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
+
         expect(availableSpaces.length).toBe(9);
     });
 
     it("should return a board with identical properties when cloned", function(){
         var clone = gameBoard.clone();
+
         for(var space=0; space<9; space++){
             expect(clone.spaces[space].mark).toBe(gameBoard.spaces[space].mark);
             expect(clone.spaces[space].position).toBe(gameBoard.spaces[space].position);
@@ -144,6 +150,7 @@ describe("Game board", function(){
 
     it("should return a new object when cloned", function(){
         var clone = gameBoard.clone();
+
         expect(clone).not.toBe(gameBoard);
     });
 
@@ -153,29 +160,35 @@ describe("Game board", function(){
         gameBoard.updateBoard("X", 5);
 
         var xMoves = gameBoard.getMoves("X");
+
         expect(xMoves.compare([0,5])).toBe(true);
     });
 
     it("should determine winner when moves aren't in win order", function(){
         gameBoard = generateXDiagonalWinState();
+
         expect(gameBoard.isWinner("X")).toBe(true);
     });
 
     it("should have no open spaces when all moves taken", function(){
         gameBoard = generateXDiagonalWinState();
+
         expect(gameBoard.hasOpenSpaces()).toBe(false);
 
         gameBoard.initialize();
+
         expect(gameBoard.hasOpenSpaces()).toBe(true);
     });
 
     it("should determine draw when all moves taken and no one is winner", function(){
         gameBoard = generateDrawState();
+
         expect(gameBoard.isDraw()).toBe(true);
     });
 
     it("should be over when there is a winner or draw", function(){
         gameBoard = generateDrawState();
+
         expect(gameBoard.isGameOver()).toBe(true);
     });
 
