@@ -11,7 +11,7 @@ $(document).ready(function(){
 function startGame(){
     var board = new GameBoard();
     var player1 = new Player("X", "computer", "green");
-    var player2 = new Player("O", "computer", "pink");
+    var player2 = new Player("O", "human", "pink");
     board.initialize();
     var view = new GameView();
     return new Game(view, board, player1, player2);
