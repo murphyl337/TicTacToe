@@ -21,32 +21,32 @@ describe("Game", function(){
         game.listen();
     });
 
-    it("is defined", function(){
+    it("should be defined", function(){
         expect(game).toBeDefined();
     });
 
-    it("has a view", function(){
+    it("should have a view", function(){
         expect(game.view).toBeDefined();
     });
 
-    it("has a board", function(){
+    it("should have a board", function(){
         expect(game.board).toBe(gameBoard);
     });
 
-    it("has 2 players", function(){
+    it("should have 2 players", function(){
         expect(game.player1).toBe(player1);
         expect(game.player2).toBe(player2);
     });
 
-    it("sets the first player as the current player on start", function(){
+    it("should set the first player as the current player on start", function(){
         expect(game.currentPlayer).toBe(player1);
     });
 
-    it("getOtherPlayer return other player (not passed)", function(){
+    it("should return other player (not passed) when getOtherPlayer called", function(){
         expect(game.getOtherPlayer(player1)).toBe(player2);
     });
 
-    it("handles click when box is clicked", function(){
+    it("should handle click when box is clicked", function(){
         spyOn(player1, "makeMove");
         spyOn(game, "nextTurn");
         spyOn(view, "update");
@@ -65,7 +65,7 @@ describe("Game", function(){
         expect($reset).toHandleWith('click', game.reset);
     });
 
-    it("nextTurn checks for a winner or draw", function(){
+    it("should check for a winner or draw when nextTurn is called", function(){
         spyOn(gameBoard, "isWinner");
         spyOn(gameBoard, "isDraw");
         spyOn(player1, "makeMove");
@@ -98,26 +98,26 @@ describe("Game board", function(){
         gameBoard.initialize();
     });
 
-    it("is defined", function(){
+    it("should be defined", function(){
         expect(gameBoard).toBeDefined();
     });
 
-    it("has 9 spaces", function(){
+    it("should have 9 spaces", function(){
         expect(gameBoard.spaces.length).toBe(9);
     });
 
-    it("is blank when initialized", function(){
+    it("should be blank when initialized", function(){
         for(var space=0; space<gameBoard.spaces.length; space++){
             expect(gameBoard.spaces[space].mark).toBe("-");
         }
     });
 
-    it("changes the mark on a space when updated", function(){
+    it("should change the mark on a space when updated", function(){
         gameBoard.updateBoard("X", 0);
         expect(gameBoard.spaces[0].mark).toBe("X");
     });
 
-    it("validMove returns true for available space, false if taken", function(){
+    it("should return true for available space, false if taken for isValidMove", function(){
         var valid = gameBoard.isValidMove(0);
         expect(valid).toBe(true);
         gameBoard.updateBoard("X", 5);
@@ -125,12 +125,12 @@ describe("Game board", function(){
         expect(valid).toBe(false);
     });
 
-    it("returns all spaces that haven't been taken", function(){
+    it("should return all spaces that haven't been taken when getAvailableSpaces is called", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
         expect(availableSpaces.length).toBe(9);
     });
 
-    it("returns a board with identical properties when cloned", function(){
+    it("should return a board with identical properties when cloned", function(){
         var clone = gameBoard.clone();
         for(var space=0; space<9; space++){
             expect(clone.spaces[space].mark).toBe(gameBoard.spaces[space].mark);
@@ -138,12 +138,12 @@ describe("Game board", function(){
         }
     });
 
-    it("returns a new object when cloned", function(){
+    it("should return a new object when cloned", function(){
         var clone = gameBoard.clone();
         expect(clone).not.toBe(gameBoard);
     });
 
-    it("returns all of a player's moves", function(){
+    it("should return all of a player's moves when getMove is called", function(){
         gameBoard.updateBoard("X", 0);
         gameBoard.updateBoard("O", 1);
         gameBoard.updateBoard("X", 5);
@@ -152,12 +152,12 @@ describe("Game board", function(){
         expect(xMoves.compare([0,5])).toBe(true);
     });
 
-    it("determines winner when moves aren't in win order", function(){
+    it("should determine winner when moves aren't in win order", function(){
         gameBoard = generateXDiagonalWinState();
         expect(gameBoard.isWinner("X")).toBe(true);
     });
 
-    it("game has no open spaces when all moves taken", function(){
+    it("should have no open spaces when all moves taken", function(){
         gameBoard = generateXDiagonalWinState();
         expect(gameBoard.hasOpenSpaces()).toBe(false);
 
@@ -165,22 +165,22 @@ describe("Game board", function(){
         expect(gameBoard.hasOpenSpaces()).toBe(true);
     });
 
-    it("determines draw when all moves taken and no one is winner", function(){
+    it("should determine draw when all moves taken and no one is winner", function(){
         gameBoard = generateDrawState();
         expect(gameBoard.isDraw()).toBe(true);
     });
 
-    it("game is over when there is a winner or draw", function(){
+    it("should be over when there is a winner or draw", function(){
         gameBoard = generateDrawState();
         expect(gameBoard.isGameOver()).toBe(true);
     });
 
     describe("Space", function(){
-        it("has a mark field", function(){
+        it("should have a mark field", function(){
             expect(gameBoard.spaces[0].mark).toBeDefined();
         });
 
-        it("has a position field", function(){
+        it("should have a position field", function(){
             expect(gameBoard.spaces[0].position).toBeDefined();
         });
     });
@@ -200,35 +200,35 @@ describe("Player", function(){
         game.listen();
     });
 
-    it("is defined", function(){
+    it("should be defined", function(){
         expect(player1).toBeDefined();
     });
 
-    it("has a marker", function(){
+    it("should have a marker", function(){
         expect(player1.marker).toBe("X");
     });
 
-    it("has a type", function(){
+    it("should have a type", function(){
         expect(player1.type).toBe("human");
     });
 
-    it("has a color", function(){
+    it("should have a color", function(){
         expect(player1.color).toBe("green");
     });
 
-    it("makeMove updates board", function(){
+    it("should update board when player makes move", function(){
         spyOn(gameBoard, "updateBoard");
         player1.makeMove(game, 0);
         expect(game.board.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
     });
 
-    it("makeMove calls game.nextTurn when complete", function(){
+    it("should call game.nextTurn when complete", function(){
         spyOn(game, "nextTurn");
         player1.makeMove(game, 0);
         expect(game.nextTurn).toHaveBeenCalled();
     });
 
-    it("makeMove will not updateBoard for invalid move", function(){
+    it("should not updateBoard when making invalid move", function(){
         game.board.updateBoard("X", 0);
         spyOn(game.board, "updateBoard");
         player1.makeMove(game, 0);
@@ -250,7 +250,7 @@ describe("Minimax/Move calculation", function(){
         game.listen();
     });
 
-    it("getDefaultBestScore is -10000 for player1, 10000 for player2", function(){
+    it("getDefaultBestScore should be -10000 for player1, 10000 for player2", function(){
         bestScore = game.getDefaultBestScore(player1);
         expect(bestScore).toBe(-10000);
 
@@ -258,7 +258,7 @@ describe("Minimax/Move calculation", function(){
         expect(bestScore).toBe(10000);
     });
 
-    it("isBestScore returns true for player1 when score is > than bestScore", function(){
+    it("isBestScore should be true for player1 when score is > than bestScore", function(){
         bestScore = game.getDefaultBestScore(player1);
         gameBoard = generateXDiagonalWinState();
         game = new Game(view, gameBoard, player1, player2);
@@ -268,7 +268,7 @@ describe("Minimax/Move calculation", function(){
         expect(game.isBestScore(score, bestScore, player1)).toBe(true);
     });
 
-    it("minimax returns 1 for player1 win", function(){
+    it("should return 1 for player1 win (minimax)", function(){
         gameBoard = generateXDiagonalWinState();
         game = new Game(view, gameBoard, player1, player2);
 
@@ -277,7 +277,7 @@ describe("Minimax/Move calculation", function(){
         expect(score).toBe(1);
     });
 
-    it("getBestMove will return center space when corner space taken", function(){
+    it("should return center space when corner space taken (getBestMove)", function(){
         gameBoard.updateBoard(player1.marker, 0);
         var move = game.getBestMove(gameBoard, player2);
 
@@ -318,7 +318,7 @@ describe("Game View", function(){
         game.listen();
     });
 
-    it("is defined", function(){
+    it("should be defined", function(){
         expect(view).toBeDefined();
     });
 
