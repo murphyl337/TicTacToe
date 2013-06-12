@@ -1,6 +1,6 @@
 $(document).ready(function(){
     var board = new GameBoard();
-    var player1 = new Player("X", "human", "green");
+    var player1 = new Player("X", "computer", "green");
     var player2 = new Player("O", "computer", "pink");
     board.initialize();
     var view = new GameView();
@@ -80,6 +80,16 @@ function GameBoard(){
         return over;
     };
 
+    this.getState = function(){
+        var state = "";
+        if(this.isGameOver()){
+            if(this.isWinner("X")) state = "X is winner";
+            if(this.isWinner("O")) state = "O is winner";
+            if(this.isDraw()) state = "It's a draw";
+        }
+        return state;
+    };
+
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
         clone.initialize();
@@ -123,8 +133,10 @@ function Game(view, board, player1, player2){
     };
 
     this.handleClick = function(event){
-        game.currentPlayer.makeMove(game, event.target.id);
-        game.view.update(event.target, game.currentPlayer);
+        if(!game.board.isGameOver()){
+            game.currentPlayer.makeMove(game, event.target.id);
+            game.view.update(event.target, game.currentPlayer);
+        }
     };
 
     this.nextTurn = function(){
@@ -138,6 +150,8 @@ function Game(view, board, player1, player2){
                 this.currentPlayer.makeMove(game, move);
             }
         }
+
+        game.view.overlay(game.board.getState());
     };
 
     this.getOtherPlayer = function(player){
@@ -204,6 +218,10 @@ function Game(view, board, player1, player2){
 function GameView(){
     this.update = function(box, player){
         markBox(box, player);
+    };
+
+    this.overlay = function(message){
+        $("#overlay").text(message);
     };
 
     var markBox = function(box, player){

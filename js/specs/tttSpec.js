@@ -46,6 +46,10 @@ describe("Game", function(){
     });
 
     it("handles click when box is clicked", function(){
+        spyOn(player1, "makeMove");
+        spyOn(game, "nextTurn");
+        spyOn(view, "update");
+
         $box.click();
 
         expect($box).toHandleWith('click', game.handleClick);
@@ -291,7 +295,6 @@ describe("Game View", function(){
     var view, player1, player2, game, gameBoard;
 
     beforeEach(function(){
-
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
@@ -312,6 +315,20 @@ describe("Game View", function(){
         player1.makeMove(game, 0);
 
         expect(view.update).toHaveBeenCalled();
+    });
+
+    it("should overlay state of game when over", function(){
+        player2 = new Player("O", "human", "pink");
+        game = new Game(view, gameBoard, player1, player2);
+        spyOn(view, "overlay");
+
+        gameBoard.updateBoard(player1.marker, 0);
+        gameBoard.updateBoard(player1.marker, 1);
+        gameBoard.updateBoard(player1.marker, 2);
+        game.nextTurn();
+
+
+        expect(view.overlay).toHaveBeenCalled();
     });
 });
 
