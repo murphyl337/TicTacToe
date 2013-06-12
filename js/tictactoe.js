@@ -129,7 +129,9 @@ function Game(view, board, player1, player2){
 
     this.listen = function(){
         var $box = $(".box");
+        var $reset = $(".reset");
         $box.on('click', game.handleClick);
+        $reset.on('click', game.reset);
     };
 
     this.handleClick = function(event){
@@ -137,6 +139,12 @@ function Game(view, board, player1, player2){
             game.currentPlayer.makeMove(game, event.target.id);
             game.view.update(event.target, game.currentPlayer);
         }
+    };
+
+    this.reset = function(){
+        game.board.initialize();
+        game.currentPlayer = game.player1;
+        game.view.clearView();
     };
 
     this.nextTurn = function(){
@@ -223,6 +231,16 @@ function GameView(){
 
     this.overlay = function(message){
         $("#info").text(message);
+    };
+
+    this.clearView = function(){
+        for(var space=0; space<9; space++){
+            var $space = $("#" + space);
+            $space.removeClass().addClass("box");
+            $space.html("");
+        }
+
+        $("#info").html("");
     };
 
     var markBox = function(box, player){

@@ -7,10 +7,11 @@
  */
 
 describe("Game", function(){
-    var game, gameBoard, player1, player2, view, $box;
+    var game, gameBoard, player1, player2, view, $box, $reset;
 
     beforeEach(function(){
         $box = affix(".box#0");
+        $reset = affix(".reset");
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
@@ -53,6 +54,15 @@ describe("Game", function(){
         $box.click();
 
         expect($box).toHandleWith('click', game.handleClick);
+    });
+
+    it("should reset game when reset button is clicked", function(){
+        spyOn(gameBoard, "initialize");
+        spyOn(view, "clearView");
+
+        $reset.click();
+
+        expect($reset).toHandleWith('click', game.reset);
     });
 
     it("nextTurn checks for a winner or draw", function(){
@@ -295,9 +305,10 @@ describe("Array", function(){
 });
 
 describe("Game View", function(){
-    var view, player1, player2, game, gameBoard;
+    var view, player1, player2, game, gameBoard, $reset;
 
     beforeEach(function(){
+        $reset = affix("#resetGame");
         gameBoard = new GameBoard();
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");

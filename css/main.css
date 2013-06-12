@@ -148,7 +148,7 @@ a {
     align: right;
 }
 
-.restartButton {
+.reset {
     -moz-box-shadow:inset 0px 1px 0px 0px #efdcfb;
     -webkit-box-shadow:inset 0px 1px 0px 0px #efdcfb;
     box-shadow:inset 0px 1px 0px 0px #efdcfb;
@@ -169,12 +169,12 @@ a {
     padding:6px 24px;
     text-decoration:none;
     text-shadow:1px 1px 0px #9752cc;
-}.restartButton:hover {
+}.reset:hover {
      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bc80ea), color-stop(1, #dfbdfa) );
      background:-moz-linear-gradient( center top, #bc80ea 5%, #dfbdfa 100% );
      filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bc80ea', endColorstr='#dfbdfa');
      background-color:#bc80ea;
- }.restartButton:active {
+ }.reset:active {
       position:relative;
       top:1px;
   }
