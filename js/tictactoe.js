@@ -41,62 +41,58 @@ function GameBoard(){
         return spaces;
     };
 
-    this.isValidMove = function(position){
-        var valid = true;
-        if(this.spaces[position].mark !== "-") valid = false;
-        return valid;
-    };
+//    this.isValidMove = function(position){
+//        var valid = true;
+//        if(this.spaces[position].mark !== "-") valid = false;
+//        return valid;
+//    };
 
-    this.getMoves = function(marker){
-        var moves = [];
-        for(var space=0; space<boardSize; space++){
-            if(this.spaces[space].mark === marker)
-                moves.push(space);
-        }
-
-        return moves;
-    };
+//    this.getMoves = function(marker){
+//        var moves = [];
+//        for(var space=0; space<boardSize; space++){
+//            if(this.spaces[space].mark === marker)
+//                moves.push(space);
+//        }
+//
+//        return moves;
+//    };
 
     this.hasOpenSpaces = function(){
-        var over = true;
-        if(this.getAvailableSpaces().length === 0) over = false;
-        return over;
+        return (this.getAvailableSpaces().length > 0);
     };
 
-    this.isWinner = function(marker){
-        var wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
-        var moves = this.getMoves(marker);
-        var winner = false;
-        for(var win=0; win<wins.length; win++){
-            if(moves.containsContentsOf(wins[win]))
-                winner = true
-        }
-        return winner;
-    };
-
-    this.isDraw = function(){
-        var draw = false;
-        if(!this.hasOpenSpaces() &&
-            (!this.isWinner("X") && !this.isWinner("O")))
-                draw = true;
-        return draw;
-    };
-
-    this.isGameOver = function(){
-        var over = false;
-        if(this.isWinner("X") || this.isWinner("O") || this.isDraw()) over = true;
-        return over;
-    };
-
-    this.getState = function(){
-        var state = "";
-        if(this.isGameOver()){
-            if(this.isWinner("X")) state = "X is winner";
-            if(this.isWinner("O")) state = "O is winner";
-            if(this.isDraw()) state = "It's a draw";
-        }
-        return state;
-    };
+//    this.isWinner = function(marker){
+//        var wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+//        var moves = this.getMoves(marker);
+//        var winner = false;
+//        for(var win=0; win<wins.length; win++){
+//            if(moves.containsContentsOf(wins[win]))
+//                winner = true
+//        }
+//        return winner;
+//    };
+//
+//    this.isDraw = function(){
+//        var draw = false;
+//        if(!this.hasOpenSpaces() &&
+//            (!this.isWinner("X") && !this.isWinner("O")))
+//                draw = true;
+//        return draw;
+//    };
+//
+//    this.isGameOver = function(){
+//        return (this.isWinner("X") || this.isWinner("O") || this.isDraw());
+//    };
+//
+//    this.getState = function(){
+//        var state = "";
+//        if(this.isGameOver()){
+//            if(this.isWinner("X")) state = "X is winner";
+//            if(this.isWinner("O")) state = "O is winner";
+//            if(this.isDraw()) state = "It's a draw";
+//        }
+//        return state;
+//    };
 
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
@@ -118,10 +114,11 @@ function Player(marker, type, color){
     this.marker = marker;
     this.type   = type;
     this.color  = color;
+    var rules = new GameRules();
 
     this.makeMove = function(game, position){
         var box = document.getElementById(position);
-        if(game.board.isValidMove(position)){
+        if(rules.isValidMove(game.board, position)){
             game.board.updateBoard(this.marker, position);
             game.view.update(box, this);
             game.nextTurn();
@@ -136,6 +133,8 @@ function Game(view, board, player1, player2){
     this.player2 = player2;
     this.currentPlayer = player1;
     var game = this;
+    var rules = new GameRules();
+
 
     this.listen = function(){
         var $box = $(".box");
@@ -145,8 +144,8 @@ function Game(view, board, player1, player2){
     };
 
     this.handleClick = function(event){
-        if(!game.board.isGameOver()){
-            if(game.board.isValidMove(event.target.id))
+        if(!rules.isGameOver(board)){
+            if(rules.isValidMove(board, event.target.id))
                 game.currentPlayer.makeMove(game, event.target.id);
         }
     };
@@ -159,15 +158,11 @@ function Game(view, board, player1, player2){
             game.currentPlayer.makeMove(game, 0);
     };
 
-    this.isFirstMove = function(){
-        return (game.board.getAvailableSpaces().length == 9);
-    };
-
     this.nextTurn = function(){
         var otherPlayer = this.getOtherPlayer(this.currentPlayer);
         this.currentPlayer = otherPlayer;
 
-        if(this.board.isGameOver() == false){
+        if(!rules.isGameOver(board)){
             if(this.currentPlayer.type === "computer"){
                 var move = game.getBestMove(game.board, game.currentPlayer);
                 var box = document.getElementById(move);
@@ -176,7 +171,7 @@ function Game(view, board, player1, player2){
             }
         }
 
-        game.view.overlay(game.board.getState());
+        game.view.overlay(rules.getState(board));
     };
 
     this.getOtherPlayer = function(player){
@@ -220,9 +215,9 @@ function Game(view, board, player1, player2){
     };
 
     this.minimax = function(board, player){
-        if(board.isWinner(this.player1.marker)) return 1;
-        else if(board.isWinner(this.player2.marker)) return -1;
-        else if(board.isDraw()) return 0;
+        if(rules.isWinner(board, this.player1.marker)) return 1;
+        else if(rules.isWinner(board, this.player2.marker)) return -1;
+        else if(rules.isDraw(board)) return 0;
 
         var otherPlayer = this.getOtherPlayer(player);
         var availableSpaces = board.getAvailableSpaces();

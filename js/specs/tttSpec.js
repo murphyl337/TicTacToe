@@ -7,13 +7,14 @@
  */
 
 describe("Game", function(){
-    var game, gameBoard, player1, player2, view, $box, $reset;
+    var game, gameBoard, rules, player1, player2, view, $box, $reset;
 
     beforeEach(function(){
         $box = affix(".box#0");
         $reset = affix(".reset");
         gameBoard = new GameBoard();
         gameBoard.initialize();
+        rules = new GameRules();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
         view = new GameView();
@@ -46,14 +47,11 @@ describe("Game", function(){
         expect(game.getOtherPlayer(player1)).toBe(player2);
     });
 
-    it("should return true for firstMove if every space is available", function(){
-        expect(game.isFirstMove()).toBe(true);
-    });
-
     it("should handle click when box is clicked", function(){
         spyOn(player1, "makeMove");
         spyOn(game, "nextTurn");
         spyOn(view, "update");
+        spyOn(rules, "isGameOver");
 
         $box.click();
 
@@ -69,18 +67,6 @@ describe("Game", function(){
         expect($reset).toHandleWith('click', game.reset);
     });
 
-    it("should check for a winner or draw when nextTurn is called", function(){
-        spyOn(gameBoard, "isWinner");
-        spyOn(gameBoard, "isDraw");
-        spyOn(player1, "makeMove");
-        spyOn(gameBoard, "isValidMove");
-
-        game.nextTurn();
-
-        expect(gameBoard.isWinner).toHaveBeenCalled();
-        expect(gameBoard.isDraw).toHaveBeenCalled();
-    });
-
     it("should end in draw for computer vs. computer", function(){
         spyOn(view, "update");
         spyOn(view, "overlay");
@@ -90,7 +76,7 @@ describe("Game", function(){
 
         player1.makeMove(game, 0);
 
-        expect(game.board.isDraw()).toBe(true);
+        expect(rules.isDraw(gameBoard)).toBe(true);
     });
 });
 
@@ -122,17 +108,6 @@ describe("Game board", function(){
         expect(gameBoard.spaces[0].mark).toBe("X");
     });
 
-    it("should return true for available space, false if taken for isValidMove", function(){
-        var valid = gameBoard.isValidMove(0);
-
-        expect(valid).toBe(true);
-
-        gameBoard.updateBoard("X", 5);
-        valid = gameBoard.isValidMove(5);
-
-        expect(valid).toBe(false);
-    });
-
     it("should return all spaces that haven't been taken when getAvailableSpaces is called", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
 
@@ -154,22 +129,6 @@ describe("Game board", function(){
         expect(clone).not.toBe(gameBoard);
     });
 
-    it("should return all of a player's moves when getMove is called", function(){
-        gameBoard.updateBoard("X", 0);
-        gameBoard.updateBoard("O", 1);
-        gameBoard.updateBoard("X", 5);
-
-        var xMoves = gameBoard.getMoves("X");
-
-        expect(xMoves.compare([0,5])).toBe(true);
-    });
-
-    it("should determine winner when moves aren't in win order", function(){
-        gameBoard = generateXDiagonalWinState();
-
-        expect(gameBoard.isWinner("X")).toBe(true);
-    });
-
     it("should have no open spaces when all moves taken", function(){
         gameBoard = generateXDiagonalWinState();
 
@@ -178,18 +137,6 @@ describe("Game board", function(){
         gameBoard.initialize();
 
         expect(gameBoard.hasOpenSpaces()).toBe(true);
-    });
-
-    it("should determine draw when all moves taken and no one is winner", function(){
-        gameBoard = generateDrawState();
-
-        expect(gameBoard.isDraw()).toBe(true);
-    });
-
-    it("should be over when there is a winner or draw", function(){
-        gameBoard = generateDrawState();
-
-        expect(gameBoard.isGameOver()).toBe(true);
     });
 
     describe("Space", function(){
@@ -203,9 +150,59 @@ describe("Game board", function(){
     });
 });
 
+describe("Game Rules", function(){
+    var board, rules;
+    beforeEach(function(){
+        board = new GameBoard();
+        board.initialize();
+        rules = new GameRules();
+    });
+
+    it("should determine winner when moves aren't in win order", function(){
+        board = generateXDiagonalWinState();
+
+        expect(rules.isWinner(board, "X")).toBe(true);
+    });
+
+    it("should return all of a player's moves when getMove is called", function(){
+        board.updateBoard("X", 0);
+        board.updateBoard("O", 1);
+        board.updateBoard("X", 5);
+
+        var xMoves = rules.getMoves(board, "X");
+
+        expect(xMoves.compare([0,5])).toBe(true);
+    });
+
+    it("should determine draw when all moves taken and no one is winner", function(){
+        board = generateDrawState();
+
+        expect(rules.isDraw(board)).toBe(true);
+    });
+
+    it("should be over when there is a winner or draw", function(){
+        board = generateDrawState();
+
+        expect(rules.isGameOver(board)).toBe(true);
+    });
+
+    it("should return true for available space, false if taken for isValidMove", function(){
+        var valid = rules.isValidMove(board, 0);
+
+        expect(valid).toBe(true);
+
+        board.updateBoard("X", 5);
+        valid = rules.isValidMove(board, 5);
+
+        expect(valid).toBe(false);
+    });
+
+});
+
 describe("Player", function(){
     var game, gameBoard, view;
     var player1, player2;
+    var rules;
 
     beforeEach(function(){
         gameBoard = new GameBoard();
@@ -213,6 +210,7 @@ describe("Player", function(){
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "human", "pink");
         view = new GameView();
+        rules = new GameRules();
         game = new Game(view, gameBoard, player1, player2);
         game.listen();
     });
