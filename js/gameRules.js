@@ -17,7 +17,7 @@ function GameRules(){
     };
 
     this.isValidMove = function(board, position){
-        return (board.spaces[position].mark === "-");
+        return (board.spaces[position].mark === "");
     };
 
     this.isWinner = function(board, marker){

@@ -7,7 +7,7 @@
  */
 
 describe("Game", function(){
-    var game, gameBoard, rules, player1, player2, view, $box, $reset;
+    var game, gameBoard, rules, player1, player2, $box, $reset;
 
     beforeEach(function(){
         $box = affix(".box#0");
@@ -17,17 +17,14 @@ describe("Game", function(){
         rules = new GameRules();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
-        view = new GameView();
-        game = new Game(view, gameBoard, player1, player2);
+        game = new Game(gameBoard, player1, player2);
         game.listen();
+        spyOn(gameBoard, "notifyObservers");
+        spyOn(gameBoard, "resetObservers");
     });
 
     it("should be defined", function(){
         expect(game).toBeDefined();
-    });
-
-    it("should have a view", function(){
-        expect(game.view).toBeDefined();
     });
 
     it("should have a board", function(){
@@ -50,7 +47,6 @@ describe("Game", function(){
     it("should handle click when box is clicked", function(){
         spyOn(player1, "makeMove");
         spyOn(game, "nextTurn");
-        spyOn(view, "update");
         spyOn(rules, "isGameOver");
 
         $box.click();
@@ -60,7 +56,6 @@ describe("Game", function(){
 
     it("should reset game when reset button is clicked", function(){
         spyOn(gameBoard, "initialize");
-        spyOn(view, "clearView");
 
         $reset.click();
 
@@ -68,11 +63,9 @@ describe("Game", function(){
     });
 
     it("should end in draw for computer vs. computer", function(){
-        spyOn(view, "update");
-        spyOn(view, "overlay");
         player1 = new Player("X", "computer", "green");
         player2 = new Player("O", "computer", "pink");
-        game = new Game(view, gameBoard, player1, player2);
+        game = new Game(gameBoard, player1, player2);
 
         player1.makeMove(game, 0);
 
@@ -81,11 +74,13 @@ describe("Game", function(){
 });
 
 describe("Game board", function(){
-    var gameBoard;
+    var gameBoard, player1, player2;
 
     beforeEach(function(){
         gameBoard = new GameBoard();
         gameBoard.initialize();
+        player1 = new Player("X", "human", "green");
+        player2 = new Player("O", "human", "pink");
     });
 
     it("should be defined", function(){
@@ -98,12 +93,12 @@ describe("Game board", function(){
 
     it("should be blank when initialized", function(){
         for(var space=0; space<gameBoard.spaces.length; space++){
-            expect(gameBoard.spaces[space].mark).toBe("-");
+            expect(gameBoard.spaces[space].mark).toBe("");
         }
     });
 
     it("should change the mark on a space when updated", function(){
-        gameBoard.updateBoard("X", 0);
+        gameBoard.updateBoard(player1, 0);
 
         expect(gameBoard.spaces[0].mark).toBe("X");
     });
@@ -112,6 +107,14 @@ describe("Game board", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
 
         expect(availableSpaces.length).toBe(9);
+    });
+
+    it("should notify observers when updating spaces", function(){
+        spyOn(gameBoard, "notifyObservers");
+
+        gameBoard.updateBoard(player1, 0, true);
+
+        expect(gameBoard.notifyObservers).toHaveBeenCalled();
     });
 
     it("should return a board with identical properties when cloned", function(){
@@ -151,11 +154,13 @@ describe("Game board", function(){
 });
 
 describe("Game Rules", function(){
-    var board, rules;
+    var board, rules, player1, player2;
     beforeEach(function(){
         board = new GameBoard();
         board.initialize();
         rules = new GameRules();
+        player1 = new Player("X", "human", "green");
+        player2 = new Player("O", "human", "pink");
     });
 
     it("should determine winner when moves aren't in win order", function(){
@@ -165,9 +170,9 @@ describe("Game Rules", function(){
     });
 
     it("should return all of a player's moves when getMove is called", function(){
-        board.updateBoard("X", 0);
-        board.updateBoard("O", 1);
-        board.updateBoard("X", 5);
+        board.updateBoard(player1, 0);
+        board.updateBoard(player2, 1);
+        board.updateBoard(player1, 5);
 
         var xMoves = rules.getMoves(board, "X");
 
@@ -209,9 +214,8 @@ describe("Player", function(){
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "human", "pink");
-        view = new GameView();
         rules = new GameRules();
-        game = new Game(view, gameBoard, player1, player2);
+        game = new Game(gameBoard, player1, player2);
         game.listen();
     });
 
@@ -233,16 +237,15 @@ describe("Player", function(){
 
     it("should update board when player makes move", function(){
         spyOn(gameBoard, "updateBoard");
-        spyOn(view, 'update');
 
         player1.makeMove(game, 0);
 
-        expect(game.board.updateBoard).toHaveBeenCalledWith(player1.marker, 0);
+        expect(game.board.updateBoard).toHaveBeenCalledWith(player1, 0, true);
     });
 
     it("should call game.nextTurn when complete", function(){
         spyOn(game, "nextTurn");
-        spyOn(view, 'update');
+        spyOn(gameBoard, "notifyObservers");
 
         player1.makeMove(game, 0);
 
@@ -260,7 +263,7 @@ describe("Player", function(){
 });
 
 describe("Minimax/Move calculation", function(){
-    var game, gameBoard, player1, player2, view;
+    var game, gameBoard, player1, player2;
     var bestScore, score;
 
     beforeEach(function(){
@@ -268,8 +271,7 @@ describe("Minimax/Move calculation", function(){
         gameBoard.initialize();
         player1 = new Player("X", "human", "green");
         player2 = new Player("O", "computer", "pink");
-        view = new GameView();
-        game = new Game(view, gameBoard, player1, player2);
+        game = new Game(gameBoard, player1, player2);
         game.listen();
     });
 
@@ -284,7 +286,7 @@ describe("Minimax/Move calculation", function(){
     it("isBestScore should be true for player1 when score is > than bestScore", function(){
         bestScore = game.getDefaultBestScore(player1);
         gameBoard = generateXDiagonalWinState();
-        game = new Game(view, gameBoard, player1, player2);
+        game = new Game(gameBoard, player1, player2);
 
         score = game.minimax(gameBoard);
 
@@ -293,7 +295,7 @@ describe("Minimax/Move calculation", function(){
 
     it("should return 1 for player1 win (minimax)", function(){
         gameBoard = generateXDiagonalWinState();
-        game = new Game(view, gameBoard, player1, player2);
+        game = new Game(gameBoard, player1, player2);
 
         var score = game.minimax(gameBoard, player1);
 
@@ -301,7 +303,7 @@ describe("Minimax/Move calculation", function(){
     });
 
     it("should return center space when corner space taken (getBestMove)", function(){
-        gameBoard.updateBoard(player1.marker, 0);
+        gameBoard.updateBoard(player1, 0);
         var move = game.getBestMove(gameBoard, player2);
 
         expect(move).toBe(4);
@@ -327,61 +329,21 @@ describe("Array", function(){
     });
 });
 
-describe("Game View", function(){
-    var view, player1, player2, game, gameBoard, $reset;
-
-    beforeEach(function(){
-        $reset = affix("#resetGame");
-        gameBoard = new GameBoard();
-        gameBoard.initialize();
-        player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "computer", "pink");
-        view = new GameView();
-        game = new Game(view, gameBoard, player1, player2);
-        game.listen();
-    });
-
-    it("should be defined", function(){
-        expect(view).toBeDefined();
-    });
-
-    it("should update when computer player makes move", function(){
-        spyOn(view, "update");
-        spyOn(game, "getBestMove").andReturn(4);
-
-        player1.makeMove(game, 0);
-
-        expect(view.update).toHaveBeenCalled();
-    });
-
-    it("should overlay state of game when over", function(){
-        player2 = new Player("O", "human", "pink");
-        game = new Game(view, gameBoard, player1, player2);
-        spyOn(view, "overlay");
-
-        gameBoard.updateBoard(player1.marker, 0);
-        gameBoard.updateBoard(player1.marker, 1);
-        gameBoard.updateBoard(player1.marker, 2);
-        game.nextTurn();
-
-
-        expect(view.overlay).toHaveBeenCalledWith("X is winner");
-    });
-});
-
 function generateXDiagonalWinState(){
     var board = new GameBoard();
     board.initialize();
+    var player1 = new Player("X", "human", "pink");
+    var player2 = new Player("O", "computer", "pink");
 
-    board.updateBoard("X", 0);
-    board.updateBoard("X", 1);
-    board.updateBoard("X", 4);
-    board.updateBoard("X", 6);
-    board.updateBoard("X", 8);
-    board.updateBoard("O", 2);
-    board.updateBoard("O", 3);
-    board.updateBoard("O", 5);
-    board.updateBoard("O", 7);
+    board.updateBoard(player1, 0);
+    board.updateBoard(player1, 1);
+    board.updateBoard(player1, 4);
+    board.updateBoard(player1, 6);
+    board.updateBoard(player1, 8);
+    board.updateBoard(player2, 2);
+    board.updateBoard(player2, 3);
+    board.updateBoard(player2, 5);
+    board.updateBoard(player2, 7);
     //  X X O
     //  O X O
     //  X O X
@@ -391,16 +353,18 @@ function generateXDiagonalWinState(){
 function generateDrawState(){
     var board = new GameBoard();
     board.initialize();
+    var player1 = new Player("X", "human", "pink");
+    var player2 = new Player("O", "computer", "pink");
 
-    board.updateBoard("X", 0);
-    board.updateBoard("X", 1);
-    board.updateBoard("X", 5);
-    board.updateBoard("X", 6);
-    board.updateBoard("X", 8);
-    board.updateBoard("O", 2);
-    board.updateBoard("O", 3);
-    board.updateBoard("O", 4);
-    board.updateBoard("O", 7);
+    board.updateBoard(player1, 0);
+    board.updateBoard(player1, 1);
+    board.updateBoard(player1, 5);
+    board.updateBoard(player1, 6);
+    board.updateBoard(player1, 8);
+    board.updateBoard(player2, 2);
+    board.updateBoard(player2, 3);
+    board.updateBoard(player2, 4);
+    board.updateBoard(player2, 7);
     //  X X O
     //  O O X
     //  X O X

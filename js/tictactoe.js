@@ -11,88 +11,60 @@ $(document).ready(function(){
 function startGame(){
     var board = new GameBoard();
     var player1 = new Player("X", "computer", "green");
-    var player2 = new Player("O", "human", "pink");
+    var player2 = new Player("O", "computer", "pink");
     board.initialize();
-    var view = new GameView();
-    return new Game(view, board, player1, player2);
+    //var view = new GameView();
+    return new Game(board, player1, player2);
 }
 
 function GameBoard(){
     this.spaces = [];
     var boardSize = 9;
+    var self = this;
 
     this.initialize = function(){
         for(var space=0; space<boardSize; space++){
-            this.spaces[space] = new Space("-");
+            this.spaces[space] = new Space("");
             this.spaces[space].position = space;
+            this.spaces[space].color = "";
         }
     };
 
-    this.updateBoard = function(marker, position){
-        this.spaces[position].mark = marker;
+    this.updateBoard = function(player, position, notifyObservers){
+        this.spaces[position].mark = player.marker;
+        this.spaces[position].color = player.color;
+        if(notifyObservers)
+            this.notifyObservers();
     };
 
     this.getAvailableSpaces = function(){
         var spaces = [];
         for(var space=0; space<boardSize; space++){
-            if(this.spaces[space].mark === "-")
+            if(this.spaces[space].mark === "")
                 spaces.push(this.spaces[space]);
         }
         return spaces;
     };
 
-//    this.isValidMove = function(position){
-//        var valid = true;
-//        if(this.spaces[position].mark !== "-") valid = false;
-//        return valid;
-//    };
-
-//    this.getMoves = function(marker){
-//        var moves = [];
-//        for(var space=0; space<boardSize; space++){
-//            if(this.spaces[space].mark === marker)
-//                moves.push(space);
-//        }
-//
-//        return moves;
-//    };
-
     this.hasOpenSpaces = function(){
         return (this.getAvailableSpaces().length > 0);
     };
 
-//    this.isWinner = function(marker){
-//        var wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
-//        var moves = this.getMoves(marker);
-//        var winner = false;
-//        for(var win=0; win<wins.length; win++){
-//            if(moves.containsContentsOf(wins[win]))
-//                winner = true
-//        }
-//        return winner;
-//    };
-//
-//    this.isDraw = function(){
-//        var draw = false;
-//        if(!this.hasOpenSpaces() &&
-//            (!this.isWinner("X") && !this.isWinner("O")))
-//                draw = true;
-//        return draw;
-//    };
-//
-//    this.isGameOver = function(){
-//        return (this.isWinner("X") || this.isWinner("O") || this.isDraw());
-//    };
-//
-//    this.getState = function(){
-//        var state = "";
-//        if(this.isGameOver()){
-//            if(this.isWinner("X")) state = "X is winner";
-//            if(this.isWinner("O")) state = "O is winner";
-//            if(this.isDraw()) state = "It's a draw";
-//        }
-//        return state;
-//    };
+    this.notifyObservers = function(){
+        for(var space=0; space<9; space++){
+            var box = document.getElementById(space);
+            box.innerHTML = self.spaces[space].mark;
+            box.setAttribute("class", "box " + self.spaces[space].color);
+        }
+    };
+
+    this.resetObservers = function(){
+        for(var space=0; space<9; space++){
+            var box = document.getElementById(space);
+            box.innerHTML = "";
+            box.setAttribute("class", "box");
+        }
+    };
 
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
@@ -108,6 +80,7 @@ function GameBoard(){
 function Space(mark){
     this.mark = mark;
     this.position;
+    this.color;
 }
 
 function Player(marker, type, color){
@@ -117,17 +90,14 @@ function Player(marker, type, color){
     var rules = new GameRules();
 
     this.makeMove = function(game, position){
-        var box = document.getElementById(position);
         if(rules.isValidMove(game.board, position)){
-            game.board.updateBoard(this.marker, position);
-            game.view.update(box, this);
+            game.board.updateBoard(this, position, true);
             game.nextTurn();
         }
     };
 }
 
-function Game(view, board, player1, player2){
-    this.view = view;
+function Game(board, player1, player2){
     this.board   = board;
     this.player1 = player1;
     this.player2 = player2;
@@ -153,9 +123,10 @@ function Game(view, board, player1, player2){
     this.reset = function(){
         game.board.initialize();
         game.currentPlayer = game.player1;
-        game.view.clearView();
+        //game.view.clearView();
         if(game.currentPlayer.type === 'computer')
             game.currentPlayer.makeMove(game, 0);
+        game.board.notifyObservers();
     };
 
     this.nextTurn = function(){
@@ -166,12 +137,11 @@ function Game(view, board, player1, player2){
             if(this.currentPlayer.type === "computer"){
                 var move = game.getBestMove(game.board, game.currentPlayer);
                 var box = document.getElementById(move);
-                game.view.update(box, game.currentPlayer);
                 this.currentPlayer.makeMove(game, move);
             }
         }
 
-        game.view.overlay(rules.getState(board));
+        //game.view.overlay(rules.getState(board));
     };
 
     this.getOtherPlayer = function(player){
@@ -203,7 +173,7 @@ function Game(view, board, player1, player2){
 
         for(var space = 0; space < availableSpaces.length; space++){
             var gameBoardChild = board.clone();
-            gameBoardChild.updateBoard(player.marker, availableSpaces[space].position);
+            gameBoardChild.updateBoard(player, availableSpaces[space].position, false);
             var currentScore = this.minimax(gameBoardChild, otherPlayer);
             var isBestScore = this.isBestScore(currentScore, bestScore, player);
             if(isBestScore){
@@ -224,39 +194,14 @@ function Game(view, board, player1, player2){
         var bestScore = this.getDefaultBestScore(player);
 
         for(var space = 0; space < availableSpaces.length; space++){
-            var gameBoardChild = board.clone();
-            gameBoardChild.updateBoard(player.marker, availableSpaces[space].position);
-            var score = this.minimax(gameBoardChild, otherPlayer);
+            var gameBoardClone = board.clone();
+            gameBoardClone.updateBoard(player, availableSpaces[space].position, false);
+            var score = this.minimax(gameBoardClone, otherPlayer);
             var isBestScore = this.isBestScore(score, bestScore, player);
             if(isBestScore)
                 bestScore = score;
         }
         return bestScore;
-    };
-}
-
-function GameView(){
-    this.update = function(box, player){
-        markBox(box, player);
-    };
-
-    this.overlay = function(message){
-        $("#info").text(message);
-    };
-
-    this.clearView = function(){
-        for(var space=0; space<9; space++){
-            var $space = $("#" + space);
-            $space.removeClass().addClass("box");
-            $space.html("");
-        }
-
-        $("#info").html("");
-    };
-
-    var markBox = function(box, player){
-        box.innerHTML = player.marker;
-        box.className += " " + player.color;
     };
 }
 
