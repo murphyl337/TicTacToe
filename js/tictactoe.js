@@ -11,9 +11,8 @@ $(document).ready(function(){
 function startGame(){
     var board = new GameBoard();
     var player1 = new Player("X", "computer", "green");
-    var player2 = new Player("O", "computer", "pink");
+    var player2 = new Player("O", "human", "pink");
     board.initialize();
-    //var view = new GameView();
     return new Game(board, player1, player2);
 }
 
@@ -123,30 +122,24 @@ function Game(board, player1, player2){
     this.reset = function(){
         game.board.initialize();
         game.currentPlayer = game.player1;
-        //game.view.clearView();
         if(game.currentPlayer.type === 'computer')
             game.currentPlayer.makeMove(game, 0);
         game.board.notifyObservers();
     };
 
     this.nextTurn = function(){
-        var otherPlayer = this.getOtherPlayer(this.currentPlayer);
-        this.currentPlayer = otherPlayer;
+        this.currentPlayer = this.getOtherPlayer(this.currentPlayer);
 
         if(!rules.isGameOver(board)){
             if(this.currentPlayer.type === "computer"){
                 var move = game.getBestMove(game.board, game.currentPlayer);
-                var box = document.getElementById(move);
                 this.currentPlayer.makeMove(game, move);
             }
         }
-
-        //game.view.overlay(rules.getState(board));
     };
 
     this.getOtherPlayer = function(player){
-        var otherPlayer = (player === this.player1) ? this.player2 : this.player1;
-        return otherPlayer;
+        return (player === this.player1) ? this.player2 : this.player1;
     };
 
 
@@ -204,35 +197,3 @@ function Game(board, player1, player2){
         return bestScore;
     };
 }
-
-Array.prototype.compare = function (array) {
-    if (!array)
-        return false;
-
-    if (this.length != array.length)
-        return false;
-
-    for (var i = 0; i < this.length; i++) {
-        if (this[i] instanceof Array && array[i] instanceof Array) {
-            if (!this[i].compare(array[i]))
-                return false;
-        }
-        else if (this[i] != array[i]) {
-            return false;
-        }
-    }
-    return true;
-};
-
-Array.prototype.containsContentsOf = function(array) {
-    var contains = true;
-    if(!array)
-        contains = false;
-
-    for(var item=0; item<array.length; item++){
-        if(this.indexOf(array[item]) < 0)
-            contains = false;
-    }
-
-    return contains;
-};
