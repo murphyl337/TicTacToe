@@ -10,8 +10,8 @@ $(document).ready(function(){
 
 function startGame(){
     var board = new GameBoard();
-    var player1 = new Player("X", "computer", "green");
-    var player2 = new Player("O", "human", "pink");
+    var player1 = new Player("X", "human");
+    var player2 = new Player("O", "human");
     board.initialize();
     return new Game(board, player1, player2);
 }
@@ -57,14 +57,6 @@ function GameBoard(){
         }
     };
 
-    this.resetObservers = function(){
-        for(var space=0; space<9; space++){
-            var box = document.getElementById(space);
-            box.innerHTML = "";
-            box.setAttribute("class", "box");
-        }
-    };
-
     GameBoard.prototype.clone = function(){
         var clone = new GameBoard();
         clone.initialize();
@@ -82,10 +74,13 @@ function Space(mark){
     this.color;
 }
 
-function Player(marker, type, color){
+function Player(marker, type){
     this.marker = marker;
     this.type   = type;
-    this.color  = color;
+    if(marker === "X")
+        this.color = "green";
+    else
+        this.color = "pink";
     var rules = new GameRules();
 
     this.makeMove = function(game, position){
@@ -123,7 +118,9 @@ function Game(board, player1, player2){
         game.currentPlayer = game.player1;
         if(game.currentPlayer.type === 'computer')
             game.currentPlayer.makeMove(game, 0);
+        game.notifyObservers();
         game.board.notifyObservers();
+
     };
 
     this.nextTurn = function(){
