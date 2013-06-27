@@ -11,6 +11,7 @@ describe("Game", function(){
 
     beforeEach(function(){
         $box = affix(".box#0");
+        affix("#info");
         $reset = affix(".reset");
         gameBoard = new GameBoard();
         gameBoard.initialize();
@@ -62,12 +63,12 @@ describe("Game", function(){
         expect($reset).toHandleWith('click', game.reset);
     });
 
-    xit("should end in draw for computer vs. computer", function(){
+    it("should end in draw for computer vs. computer", function(){
         player1 = new Player("X", "computer");
         player2 = new Player("O", "computer");
         game = new Game(gameBoard, player1, player2);
 
-        player1.makeMove(game, 0);
+        player1.makeMove(game, 0, false);
 
         expect(rules.isDraw(gameBoard)).toBe(true);
     });
