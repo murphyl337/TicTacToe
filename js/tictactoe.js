@@ -104,7 +104,6 @@ function Game(board, player1, player2){
     var game = this;
     var rules = new GameRules();
 
-
     this.listen = function(){
         var $box = $(".box");
         var $reset = $(".reset");
@@ -136,6 +135,13 @@ function Game(board, player1, player2){
                 this.currentPlayer.makeMove(game, move);
             }
         }
+
+        this.notifyObservers();
+    };
+
+    this.notifyObservers = function(){
+        var overlay = document.getElementById("info");
+        overlay.innerHTML = rules.getState(this.board);
     };
 
     this.getOtherPlayer = function(player){
