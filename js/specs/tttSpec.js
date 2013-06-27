@@ -16,8 +16,8 @@ describe("Game", function(){
         gameBoard = new GameBoard();
         gameBoard.initialize();
         rules = new GameRules();
-        player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "computer", "pink");
+        player1 = new Player("X", "human");
+        player2 = new Player("O", "computer");
         game = new Game(gameBoard, player1, player2);
         game.listen();
         spyOn(gameBoard, "notifyObservers");
