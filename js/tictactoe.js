@@ -10,7 +10,7 @@ $(document).ready(function(){
 
 function startGame(){
     var board = new GameBoard();
-    var player1 = new Player("X", "human");
+    var player1 = new Player("X", "computer");
     var player2 = new Player("O", "human");
     board.initialize();
     return new Game(board, player1, player2);
@@ -20,6 +20,15 @@ function GameBoard(){
     this.spaces = [];
     var boardSize = 9;
     var self = this;
+    var view = new Observer();
+
+    view.Update = function(){
+        for(var space=0; space<9; space++){
+            var box = document.getElementById(space);
+            box.innerHTML = self.spaces[space].mark;
+            box.setAttribute("class", "box " + self.spaces[space].color);
+        }
+    };
 
     this.initialize = function(){
         for(var space=0; space<boardSize; space++){
@@ -50,11 +59,7 @@ function GameBoard(){
     };
 
     this.notifyObservers = function(){
-        for(var space=0; space<9; space++){
-            var box = document.getElementById(space);
-            box.innerHTML = self.spaces[space].mark;
-            box.setAttribute("class", "box " + self.spaces[space].color);
-        }
+        view.Update();
     };
 
     GameBoard.prototype.clone = function(){
@@ -98,6 +103,12 @@ function Game(board, player1, player2){
     this.currentPlayer = player1;
     var game = this;
     var rules = new GameRules();
+    var overlay = new Observer();
+
+    overlay.Update = function(){
+        var info = document.getElementById("info");
+        info.innerHTML = rules.getState(game.board);
+    };
 
     this.listen = function(){
         var $box = $(".box");
@@ -109,7 +120,7 @@ function Game(board, player1, player2){
     this.handleClick = function(event){
         if(!rules.isGameOver(board)){
             if(rules.isValidMove(board, event.target.id))
-                game.currentPlayer.makeMove(game, event.target.id);
+                game.currentPlayer.makeMove(this, event.target.id);
         }
     };
 
@@ -120,7 +131,6 @@ function Game(board, player1, player2){
             game.currentPlayer.makeMove(game, 0);
         game.notifyObservers();
         game.board.notifyObservers();
-
     };
 
     this.nextTurn = function(){
@@ -137,8 +147,7 @@ function Game(board, player1, player2){
     };
 
     this.notifyObservers = function(){
-        var overlay = document.getElementById("info");
-        overlay.innerHTML = rules.getState(this.board);
+        overlay.Update();
     };
 
     this.getOtherPlayer = function(player){

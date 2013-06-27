@@ -20,7 +20,7 @@ describe("Game", function(){
         game = new Game(gameBoard, player1, player2);
         game.listen();
         spyOn(gameBoard, "notifyObservers");
-        spyOn(gameBoard, "resetObservers");
+        spyOn(game, "notifyObservers");
     });
 
     it("should be defined", function(){
@@ -62,9 +62,9 @@ describe("Game", function(){
         expect($reset).toHandleWith('click', game.reset);
     });
 
-    it("should end in draw for computer vs. computer", function(){
-        player1 = new Player("X", "computer", "green");
-        player2 = new Player("O", "computer", "pink");
+    xit("should end in draw for computer vs. computer", function(){
+        player1 = new Player("X", "computer");
+        player2 = new Player("O", "computer");
         game = new Game(gameBoard, player1, player2);
 
         player1.makeMove(game, 0);
@@ -159,8 +159,8 @@ describe("Game Rules", function(){
         board = new GameBoard();
         board.initialize();
         rules = new GameRules();
-        player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "human", "pink");
+        player1 = new Player("X", "human");
+        player2 = new Player("O", "human");
     });
 
     it("should determine winner when moves aren't in win order", function(){
@@ -212,11 +212,13 @@ describe("Player", function(){
     beforeEach(function(){
         gameBoard = new GameBoard();
         gameBoard.initialize();
-        player1 = new Player("X", "human", "green");
-        player2 = new Player("O", "human", "pink");
+        player1 = new Player("X", "human");
+        player2 = new Player("O", "human");
         rules = new GameRules();
         game = new Game(gameBoard, player1, player2);
         game.listen();
+        spyOn(gameBoard, "notifyObservers");
+        spyOn(game, "notifyObservers");
     });
 
     it("should be defined", function(){
@@ -245,7 +247,6 @@ describe("Player", function(){
 
     it("should call game.nextTurn when complete", function(){
         spyOn(game, "nextTurn");
-        spyOn(gameBoard, "notifyObservers");
 
         player1.makeMove(game, 0);
 
@@ -310,6 +311,37 @@ describe("Minimax/Move calculation", function(){
     });
 });
 
+describe("Observer", function(){
+    var observer;
+    var game, board, player1, player2;
+
+    beforeEach(function(){
+        for(var space=0; space<9; space++)
+            affix("#"+space);
+        observer = new Observer();
+        board = new GameBoard();
+        board.initialize();
+        player1 = new Player("X", "human");
+        player2 = new Player("O", "human");
+        game = new Game(board, player1, player2);
+        spyOn(game, "notifyObservers");
+    });
+
+    it("should be defined", function(){
+       expect(observer).toBeDefined();
+    });
+
+    describe("DOM", function(){
+        it("should update when observer is notified", function(){
+            player1.makeMove(game, 0);
+
+            expect(document.getElementById(0)).toHaveText("X");
+            expect(document.getElementById(0)).toHaveClass("box green");
+        });
+
+    });
+});
+
 describe("Array", function(){
     it("compares two arrays for matching contents", function(){
         var array1 = [0,1,2];
@@ -332,8 +364,8 @@ describe("Array", function(){
 function generateXDiagonalWinState(){
     var board = new GameBoard();
     board.initialize();
-    var player1 = new Player("X", "human", "pink");
-    var player2 = new Player("O", "computer", "pink");
+    var player1 = new Player("X", "human");
+    var player2 = new Player("O", "computer");
 
     board.updateBoard(player1, 0);
     board.updateBoard(player1, 1);
@@ -353,8 +385,8 @@ function generateXDiagonalWinState(){
 function generateDrawState(){
     var board = new GameBoard();
     board.initialize();
-    var player1 = new Player("X", "human", "pink");
-    var player2 = new Player("O", "computer", "pink");
+    var player1 = new Player("X", "human");
+    var player2 = new Player("O", "computer");
 
     board.updateBoard(player1, 0);
     board.updateBoard(player1, 1);
