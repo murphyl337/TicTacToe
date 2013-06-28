@@ -10,13 +10,27 @@ $(document).ready(function(){
 
 function startGame(){
     var board = new GameBoard();
-    var player1 = new Player("X", "computer");
-    var player2 = new Player("O", "human");
+    var player1 = new Player("X", "human");
+    var player2 = new Player("O", "computer");
     board.initialize();
     return new Game(board, player1, player2);
 }
 
+GameBoard.prototype = new Subject();
+GameBoard.prototype.constructor = Subject;
+
+GameBoard.prototype.clone = function(){
+    var clone = new GameBoard();
+    clone.initialize();
+    for(var space=0; space<9; space++){
+        clone.spaces[space].mark = this.spaces[space].mark;
+        clone.spaces[space].position = this.spaces[space].position;
+    }
+    return clone;
+};
+
 function GameBoard(){
+    Subject.call(this);
     this.spaces = [];
     var boardSize = 9;
     var self = this;
@@ -30,6 +44,8 @@ function GameBoard(){
         }
     };
 
+    this.addObserver(view);
+
     this.initialize = function(){
         for(var space=0; space<boardSize; space++){
             this.spaces[space] = new Space("");
@@ -42,7 +58,7 @@ function GameBoard(){
         this.spaces[position].mark = player.marker;
         this.spaces[position].color = player.color;
         if(notifyObservers)
-            this.notifyObservers();
+           this.notifyObservers();
     };
 
     this.getAvailableSpaces = function(){
@@ -56,20 +72,6 @@ function GameBoard(){
 
     this.hasOpenSpaces = function(){
         return (this.getAvailableSpaces().length > 0);
-    };
-
-    this.notifyObservers = function(){
-        view.Update();
-    };
-
-    GameBoard.prototype.clone = function(){
-        var clone = new GameBoard();
-        clone.initialize();
-        for(var space=0; space<boardSize; space++){
-            clone.spaces[space].mark = this.spaces[space].mark;
-            clone.spaces[space].position = this.spaces[space].position;
-        }
-        return clone;
     };
 }
 
@@ -96,7 +98,11 @@ function Player(marker, type){
     };
 }
 
+Game.prototype = new Subject();
+Game.prototype.constructor = Subject;
+
 function Game(board, player1, player2){
+    Subject.call(this);
     this.board   = board;
     this.player1 = player1;
     this.player2 = player2;
@@ -109,6 +115,8 @@ function Game(board, player1, player2){
         var info = document.getElementById("info");
         info.innerHTML = rules.getState(game.board);
     };
+
+    this.addObserver(overlay);
 
     this.listen = function(){
         var $box = $(".box");
@@ -144,10 +152,6 @@ function Game(board, player1, player2){
         }
 
         this.notifyObservers();
-    };
-
-    this.notifyObservers = function(){
-        overlay.Update();
     };
 
     this.getOtherPlayer = function(player){

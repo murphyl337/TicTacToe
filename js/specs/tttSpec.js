@@ -22,6 +22,7 @@ describe("Game", function(){
         game.listen();
         spyOn(gameBoard, "notifyObservers");
         spyOn(game, "notifyObservers");
+        spyOn(player2, "makeMove");
     });
 
     it("should be defined", function(){
@@ -39,6 +40,14 @@ describe("Game", function(){
 
     it("should set the first player as the current player on start", function(){
         expect(game.currentPlayer).toBe(player1);
+    });
+
+    it("should notify observers when game ends", function(){
+        game.board = generateDrawState();
+
+        game.nextTurn();
+
+        expect(game.notifyObservers).toHaveBeenCalled();
     });
 
     it("should return other player (not passed) when getOtherPlayer called", function(){
@@ -68,7 +77,7 @@ describe("Game", function(){
         player2 = new Player("O", "computer");
         game = new Game(gameBoard, player1, player2);
 
-        player1.makeMove(game, 0, false);
+        player1.makeMove(game, 0);
 
         expect(rules.isDraw(gameBoard)).toBe(true);
     });
@@ -108,6 +117,10 @@ describe("Game board", function(){
         var availableSpaces = gameBoard.getAvailableSpaces();
 
         expect(availableSpaces.length).toBe(9);
+    });
+
+    it("should have one observer", function(){
+        expect(gameBoard.observers.Count()).toBe(1);
     });
 
     it("should notify observers when updating spaces", function(){
